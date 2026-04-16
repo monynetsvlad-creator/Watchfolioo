@@ -1,0 +1,13 @@
+﻿.idea/
+.vs/
+bin/
+obj/
+*.user
+
+*.exe
+*.dll
+*.pdb
+
+
+.shelf/
+workspace.xml

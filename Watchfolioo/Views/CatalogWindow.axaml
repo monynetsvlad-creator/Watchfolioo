@@ -1,0 +1,229 @@
+﻿<Window
+    Background="#0F0F0F"
+    Height="700"
+    MinHeight="600"
+    MinWidth="350"
+    Title="Watchfolio"
+    Width="400"
+    x:Class="Watchfolio.Views.CatalogWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!--  ЗВЕРХУ: Логотип + Пошук + Категорії  -->
+        <Border
+            Background="#141414"
+            BorderBrush="#222"
+            BorderThickness="0,0,0,1"
+            Grid.Row="0"
+            Padding="12,10">
+            <StackPanel Spacing="10">
+                <TextBlock
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Foreground="#E50914"
+                    HorizontalAlignment="Center"
+                    Text="WATCHFOLIO" />
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label
+                        Content="🔍"
+                        FontSize="16"
+                        Grid.Column="0"
+                        Margin="0,0,6,0"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Background="#222"
+                        BorderThickness="0"
+                        CornerRadius="8"
+                        Foreground="White"
+                        Grid.Column="1"
+                        Height="38"
+                        Name="SearchBox"
+                        TextChanged="SearchBox_OnTextChanged"
+                        VerticalContentAlignment="Center"
+                        Watermark="Пошук фільмів та серіалів..." />
+                </Grid>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="CategoryPanel"
+                        Orientation="Horizontal"
+                        Spacing="8" />
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+
+        <!--  СЕРЕДИНА: Контент  -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="12,16,12,12" Spacing="20">
+
+                <StackPanel Name="PopularSection" Spacing="10">
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#BBBBBB"
+                        Text="Зараз популярне" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <StackPanel
+                            Name="PopularRow"
+                            Orientation="Horizontal"
+                            Spacing="10" />
+                    </ScrollViewer>
+                </StackPanel>
+
+                <StackPanel Name="MoviesSection" Spacing="10">
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#BBBBBB"
+                        Text="Фільми" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <StackPanel
+                            Name="MoviesRow"
+                            Orientation="Horizontal"
+                            Spacing="10" />
+                    </ScrollViewer>
+                </StackPanel>
+
+                <StackPanel Name="SeriesSection" Spacing="10">
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#BBBBBB"
+                        Text="Серіали" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <StackPanel
+                            Name="SeriesRow"
+                            Orientation="Horizontal"
+                            Spacing="10" />
+                    </ScrollViewer>
+                </StackPanel>
+
+                <StackPanel
+                    IsVisible="False"
+                    Name="SearchSection"
+                    Spacing="10">
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#BBBBBB"
+                        Name="SearchResultsTitle"
+                        Text="Результати пошуку" />
+                    <StackPanel Name="SearchRow" Spacing="10" />
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!--  ЗНИЗУ: Навігація  -->
+        <Border
+            Background="#141414"
+            BorderBrush="#222"
+            BorderThickness="0,1,0,0"
+            Grid.Row="2"
+            Height="65">
+            <UniformGrid Columns="5">
+                <Button
+                    Classes="NavButton"
+                    Click="Nav_Home"
+                    Name="HomeBtn">
+                    <StackPanel HorizontalAlignment="Center" Spacing="2">
+                        <TextBlock
+                            FontSize="20"
+                            HorizontalAlignment="Center"
+                            Text="🏠" />
+                        <TextBlock
+                            FontSize="10"
+                            HorizontalAlignment="Center"
+                            Text="Головна" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Classes="NavButton"
+                    Click="Nav_Movies"
+                    Name="MoviesBtn">
+                    <StackPanel HorizontalAlignment="Center" Spacing="2">
+                        <TextBlock
+                            FontSize="20"
+                            HorizontalAlignment="Center"
+                            Text="🎬" />
+                        <TextBlock
+                            FontSize="10"
+                            HorizontalAlignment="Center"
+                            Text="Фільми" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Classes="NavButton"
+                    Click="Nav_Series"
+                    Name="SeriesBtn">
+                    <StackPanel HorizontalAlignment="Center" Spacing="2">
+                        <TextBlock
+                            FontSize="20"
+                            HorizontalAlignment="Center"
+                            Text="📺" />
+                        <TextBlock
+                            FontSize="10"
+                            HorizontalAlignment="Center"
+                            Text="Серіали" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Classes="NavButton"
+                    Click="Nav_Fav"
+                    Name="FavBtn">
+                    <StackPanel HorizontalAlignment="Center" Spacing="2">
+                        <TextBlock
+                            FontSize="20"
+                            HorizontalAlignment="Center"
+                            Text="❤️" />
+                        <TextBlock
+                            FontSize="10"
+                            HorizontalAlignment="Center"
+                            Text="Обране" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Classes="NavButton"
+                    Click="Nav_Settings"
+                    Name="SettingsBtn">
+                    <StackPanel HorizontalAlignment="Center" Spacing="2">
+                        <TextBlock
+                            FontSize="20"
+                            HorizontalAlignment="Center"
+                            Text="⚙️" />
+                        <TextBlock
+                            FontSize="10"
+                            HorizontalAlignment="Center"
+                            Text="Налаштування" />
+                    </StackPanel>
+                </Button>
+            </UniformGrid>
+        </Border>
+
+    </Grid>
+
+    <Window.Styles>
+        <Style Selector="Button.NavButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Foreground" Value="#888" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.NavButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.CategoryTag">
+            <Setter Property="Background" Value="#222" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="CornerRadius" Value="15" />
+            <Setter Property="Padding" Value="12,4" />
+        </Style>
+        <Style Selector="Button.CategoryTag.Active">
+            <Setter Property="Background" Value="#E50914" />
+        </Style>
+    </Window.Styles>
+</Window>

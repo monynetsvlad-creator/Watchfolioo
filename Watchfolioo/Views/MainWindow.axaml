@@ -1,0 +1,132 @@
+<Window
+    Height="500"
+    MinHeight="450"
+    MinWidth="320"
+    Title="Watchfolio"
+    Width="400"
+    WindowStartupLocation="CenterScreen"
+    x:Class="Watchfolio.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid>
+        <StackPanel
+            IsVisible="True"
+            Margin="40"
+            Name="LoginForm"
+            Spacing="20"
+            VerticalAlignment="Center">
+            <TextBlock
+                FontSize="32"
+                FontWeight="Bold"
+                Foreground="#E50914"
+                HorizontalAlignment="Center"
+                Text="Watchfolio" />
+            <Label
+                Content="Введіть свої дані для входу"
+                FontSize="13"
+                Foreground="#888"
+                HorizontalAlignment="Center" />
+            <TextBox
+                Background="#333"
+                BorderThickness="0"
+                CornerRadius="8"
+                Foreground="White"
+                Name="LoginUser"
+                Watermark="Логін" />
+            <TextBox
+                Background="#333"
+                BorderThickness="0"
+                CornerRadius="8"
+                Foreground="White"
+                Name="LoginPass"
+                PasswordChar="*"
+                Watermark="Пароль" />
+            <TextBlock
+                FontSize="14"
+                Foreground="Red"
+                HorizontalAlignment="Center"
+                IsVisible="False"
+                Name="ErrorMessage"
+                Text="Помилка" />
+            <Button
+                Background="#E50914"
+                Click="Login_OnClick"
+                Content="Увійти"
+                CornerRadius="8"
+                Foreground="White"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center" />
+            <Button
+                Background="Transparent"
+                Click="ShowRegister_OnClick"
+                Content="Зареєструватися"
+                Foreground="#888"
+                HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <StackPanel
+            IsVisible="False"
+            Margin="40"
+            Name="RegistrationForm"
+            Spacing="20"
+            VerticalAlignment="Center">
+            <TextBlock
+                FontSize="24"
+                FontWeight="Bold"
+                Foreground="#E50914"
+                HorizontalAlignment="Center"
+                Text="Реєстрація" />
+            <Label
+                Content="Створіть новий акаунт"
+                FontSize="13"
+                Foreground="#888"
+                HorizontalAlignment="Center" />
+            <TextBox
+                Background="#333"
+                BorderThickness="0"
+                CornerRadius="8"
+                Foreground="White"
+                Name="RegUser"
+                Watermark="Логін" />
+            <TextBox
+                Background="#333"
+                BorderThickness="0"
+                CornerRadius="8"
+                Foreground="White"
+                Name="RegPass"
+                PasswordChar="*"
+                Watermark="Пароль" />
+            <TextBlock
+                FontSize="14"
+                Foreground="Red"
+                HorizontalAlignment="Center"
+                IsVisible="False"
+                Name="RegErrorMessage"
+                Text="Цей логін уже зайнятий!" />
+            <Button
+                Background="#E50914"
+                Click="RegisterAccount_OnClick"
+                Content="Створити профіль"
+                CornerRadius="8"
+                Foreground="White"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center" />
+            <Button
+                Background="Transparent"
+                Click="ShowLogin_OnClick"
+                Content="Назад до входу"
+                Foreground="#888"
+                HorizontalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+
+    <Window.Styles>
+        <Style Selector="Window">
+            <Setter Property="Background" Value="#0F0F0F" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="10,8" />
+        </Style>
+    </Window.Styles>
+</Window>

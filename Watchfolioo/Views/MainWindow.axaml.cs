@@ -1,10 +1,10 @@
-namespace Watchfolio.Views;
+namespace Watchfolioo.Views;
 
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System.IO;
 using System.Text.Json;
-using Watchfolio.Models;
+using Watchfolioo.Models;
 
 public partial class MainWindow : Window
 {

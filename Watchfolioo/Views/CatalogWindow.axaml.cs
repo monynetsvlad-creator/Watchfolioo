@@ -1,4 +1,4 @@
-﻿namespace Watchfolio.Views;
+﻿namespace Watchfolioo.Views;
 
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -6,7 +6,7 @@ using Avalonia.Media;
 using Avalonia.Layout;
 using System.Collections.Generic;
 using System.Linq;
-using Watchfolio.Models;
+using Watchfolioo.Models;
 
 public partial class CatalogWindow : Window
 {

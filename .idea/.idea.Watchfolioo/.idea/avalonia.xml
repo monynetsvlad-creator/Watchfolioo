@@ -6,6 +6,9 @@
         <entry key="Watchfolioo/App.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/MainWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Views/CatalogWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
+        <entry key="Watchfolioo/Views/MainWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
+        <entry key="Watchfolioo/Views/MenuWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
+        <entry key="Watchfolioo/Views/MoviesWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
       </map>
     </option>
   </component>

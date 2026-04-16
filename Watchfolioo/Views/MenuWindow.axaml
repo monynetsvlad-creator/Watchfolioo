@@ -1,0 +1,7 @@
+﻿<Window
+    Height="700"
+    Title="Menu"
+    Width="400"
+    x:Class="Watchfolioo.Views.MenuWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" />

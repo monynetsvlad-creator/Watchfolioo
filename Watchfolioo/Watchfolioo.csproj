@@ -19,13 +19,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Assets\Images\" />
+      <Folder Include="Models\" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Views\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+      <None Remove="Assets\Images\Menu.jpg" />
+      <AvaloniaResource Include="Assets\Images\Menu.jpg" />
     </ItemGroup>
+
 </Project>

@@ -1,0 +1,22 @@
+﻿<UserControl
+    x:Class="Watchfolioo.Views.SettingsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel Margin="16" Spacing="16">
+        <TextBlock
+            FontSize="22"
+            FontWeight="Bold"
+            Foreground="White"
+            Text="Налаштування" />
+        <TextBlock
+            FontSize="14"
+            Foreground="#888"
+            Text="Тут будуть налаштування додатку." />
+        <TextBlock
+            FontSize="14"
+            Foreground="#E50914"
+            Name="ParamText"
+            Text="" />
+    </StackPanel>
+</UserControl>

@@ -24,104 +24,112 @@
         </Border>
 
         <Grid Grid.Row="1">
+
             <Image Source="avares://Watchfolioo/Assets/Images/Menu.jpg" Stretch="UniformToFill" />
 
             <StackPanel
                 HorizontalAlignment="Center"
-                IsVisible="True"
                 Margin="40"
-                Name="LoginForm"
                 Spacing="15"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center"
+                x:Name="LoginForm">
+
                 <TextBlock
                     FontSize="32"
                     FontWeight="Bold"
                     Foreground="#E50914"
                     HorizontalAlignment="Center"
                     Text="Watchfolio" />
+
                 <TextBox
                     Background="#333"
                     BorderThickness="0"
                     Foreground="White"
-                    Name="LoginUser"
-                    PlaceholderText="Логін" />
+                    PlaceholderText="Логін"
+                    x:Name="LoginUser" />
+
                 <TextBox
                     Background="#333"
                     BorderThickness="0"
                     Foreground="White"
-                    Name="LoginPass"
                     PasswordChar="*"
-                    PlaceholderText="Пароль" />
+                    PlaceholderText="Пароль"
+                    x:Name="LoginPass" />
+
                 <TextBlock
-                    FontSize="14"
                     Foreground="Red"
                     HorizontalAlignment="Center"
                     IsVisible="False"
-                    Name="ErrorMessage"
-                    Text="Помилка" />
+                    Text="Помилка"
+                    x:Name="ErrorMessage" />
+
                 <Button
                     Background="#E50914"
                     Click="Login_OnClick"
                     Content="Увійти"
                     Foreground="White"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    Margin="0,5" />
+                    HorizontalAlignment="Center" />
+
                 <Button
                     Background="Transparent"
                     Click="ShowRegister_OnClick"
                     Content="Зареєструватися"
                     Foreground="White"
                     HorizontalAlignment="Center" />
+
             </StackPanel>
 
             <StackPanel
                 HorizontalAlignment="Center"
                 IsVisible="False"
                 Margin="40"
-                Name="RegistrationForm"
                 Spacing="15"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center"
+                x:Name="RegistrationForm">
+
                 <TextBlock
                     FontSize="24"
                     Foreground="White"
                     HorizontalAlignment="Center"
                     Text="Реєстрація" />
+
                 <TextBox
                     Background="#333"
                     BorderThickness="0"
                     Foreground="White"
-                    Name="RegUser"
-                    PlaceholderText="Логін" />
+                    PlaceholderText="Логін"
+                    x:Name="RegUser" />
+
                 <TextBox
                     Background="#333"
                     BorderThickness="0"
                     Foreground="White"
-                    Name="RegPass"
                     PasswordChar="*"
-                    PlaceholderText="Пароль" />
+                    PlaceholderText="Пароль"
+                    x:Name="RegPass" />
+
                 <TextBlock
-                    FontSize="14"
                     Foreground="Red"
                     HorizontalAlignment="Center"
                     IsVisible="False"
-                    Name="RegErrorMessage"
-                    Text="Цей логін уже зайнятий!" />
+                    Text="Цей логін уже зайнятий!"
+                    x:Name="RegErrorMessage" />
+
                 <Button
                     Background="#E50914"
                     Click="RegisterAccount_OnClick"
                     Content="Створити профіль"
-                    Foreground="White"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    Margin="0,5" />
+                    Foreground="White" />
+
                 <Button
                     Background="Transparent"
                     Click="ShowLogin_OnClick"
                     Content="Назад до входу"
                     Foreground="White"
                     HorizontalAlignment="Center" />
+
             </StackPanel>
+
         </Grid>
 
         <Border

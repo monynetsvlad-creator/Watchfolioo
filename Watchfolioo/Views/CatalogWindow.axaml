@@ -10,7 +10,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid RowDefinitions="Auto,*,Auto">
-
         <Border
             Background="#141414"
             BorderBrush="#222"
@@ -18,23 +17,18 @@
             Grid.Row="0"
             Padding="12,10">
             <StackPanel Spacing="10">
-
-
                 <TextBlock
                     FontSize="24"
                     FontWeight="Bold"
                     Foreground="#E50914"
                     HorizontalAlignment="Center"
                     Text="WATCHFOLIO" />
-
-                <!--  Пошук  -->
                 <Grid ColumnDefinitions="Auto,*">
                     <Label
-                        Content="Пошук:"
-                        FontSize="13"
-                        Foreground="#888"
+                        Content="🔍"
+                        FontSize="16"
                         Grid.Column="0"
-                        Margin="0,0,8,0"
+                        Margin="0,0,6,0"
                         VerticalAlignment="Center" />
                     <TextBox
                         Background="#222"
@@ -44,88 +38,21 @@
                         Grid.Column="1"
                         Height="38"
                         Name="SearchBox"
-                        PlaceholderText="Фільми, серіали..."
                         TextChanged="SearchBox_OnTextChanged"
-                        VerticalContentAlignment="Center" />
+                        VerticalContentAlignment="Center"
+                        Watermark="Пошук фільмів та серіалів..." />
                 </Grid>
-
-
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="CategoryPanel"
                         Orientation="Horizontal"
                         Spacing="8" />
                 </ScrollViewer>
-
             </StackPanel>
         </Border>
 
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="12,16,12,12" Spacing="20">
-
-
-                <StackPanel Name="PopularSection" Spacing="10">
-                    <TextBlock
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="#BBBBBB"
-                        Text="Зараз популярне" />
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                        <StackPanel
-                            Name="PopularRow"
-                            Orientation="Horizontal"
-                            Spacing="10" />
-                    </ScrollViewer>
-                </StackPanel>
-
-
-                <StackPanel Name="MoviesSection" Spacing="10">
-                    <TextBlock
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="#BBBBBB"
-                        Text="Фільми" />
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                        <StackPanel
-                            Name="MoviesRow"
-                            Orientation="Horizontal"
-                            Spacing="10" />
-                    </ScrollViewer>
-                </StackPanel>
-
-
-                <StackPanel Name="SeriesSection" Spacing="10">
-                    <TextBlock
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="#BBBBBB"
-                        Text="Серіали" />
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                        <StackPanel
-                            Name="SeriesRow"
-                            Orientation="Horizontal"
-                            Spacing="10" />
-                    </ScrollViewer>
-                </StackPanel>
-
-
-                <StackPanel
-                    IsVisible="False"
-                    Name="SearchSection"
-                    Spacing="10">
-                    <TextBlock
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="#BBBBBB"
-                        Name="SearchResultsTitle"
-                        Text="Результати пошуку" />
-                    <StackPanel Name="SearchRow" Spacing="10" />
-                </StackPanel>
-
-            </StackPanel>
-        </ScrollViewer>
-
+        <ContentControl Grid.Row="1" Name="PageFrame" />
 
         <Border
             Background="#141414"
@@ -222,9 +149,6 @@
             <Setter Property="Foreground" Value="#888" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
-        <Style Selector="Button.NavButton.Active /template/ ContentPresenter">
-            <Setter Property="TextBlock.Foreground" Value="#E50914" />
         </Style>
         <Style Selector="Button.NavButton:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="Transparent" />

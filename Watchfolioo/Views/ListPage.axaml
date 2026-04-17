@@ -3,15 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StackPanel Margin="16" Spacing="16">
-        <TextBlock
-            FontSize="22"
-            FontWeight="Bold"
-            Foreground="White"
-            Text="Список фільмів" />
-        <TextBlock
-            FontSize="14"
-            Foreground="#888"
-            Text="Тут відображаються всі фільми та серіали." />
-    </StackPanel>
+    <ScrollViewer>
+        <WrapPanel Margin="20" x:Name="MoviesPanel" />
+    </ScrollViewer>
+
 </UserControl>

@@ -1,5 +1,5 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
     <Color x:Key="PrimaryColor">#E50914</Color>
     <Color x:Key="BackgroundColor">#0F0F0F</Color>
     <Color x:Key="SurfaceColor">#1E1E1E</Color>
@@ -8,7 +8,7 @@
     <Color x:Key="TextSecondaryColor">#888888</Color>
     <Color x:Key="TextMutedColor">#BBBBBB</Color>
     <Color x:Key="GoldColor">#FFD700</Color>
-    
+
     <SolidColorBrush Color="{StaticResource PrimaryColor}" x:Key="PrimaryBrush" />
     <SolidColorBrush Color="{StaticResource BackgroundColor}" x:Key="BackgroundBrush" />
     <SolidColorBrush Color="{StaticResource SurfaceColor}" x:Key="SurfaceBrush" />
@@ -17,14 +17,14 @@
     <SolidColorBrush Color="{StaticResource TextSecondaryColor}" x:Key="TextSecondaryBrush" />
     <SolidColorBrush Color="{StaticResource TextMutedColor}" x:Key="TextMutedBrush" />
     <SolidColorBrush Color="{StaticResource GoldColor}" x:Key="GoldBrush" />
-    
+
     <x:Double x:Key="FontSizeSmall">11</x:Double>
     <x:Double x:Key="FontSizeNormal">14</x:Double>
     <x:Double x:Key="FontSizeMedium">16</x:Double>
     <x:Double x:Key="FontSizeLarge">22</x:Double>
     <x:Double x:Key="FontSizeTitle">24</x:Double>
 
-   
+
     <Style Selector="Button" x:Key="PrimaryButtonStyle">
         <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
@@ -33,7 +33,7 @@
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
-    
+
     <Style Selector="Button" x:Key="NavButtonStyle">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
@@ -43,7 +43,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    
+
     <Style Selector="TextBox" x:Key="SearchBoxStyle">
         <Setter Property="Background" Value="{StaticResource SurfaceLightBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
@@ -52,21 +52,21 @@
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="10,8" />
     </Style>
-    
+
     <Style Selector="TextBlock" x:Key="SectionTitleStyle">
         <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Margin" Value="0,0,0,8" />
     </Style>
-    
+
     <Style Selector="TextBlock" x:Key="AppTitleStyle">
         <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
-    
+
     <Style Selector="Border" x:Key="CardStyle">
         <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
         <Setter Property="CornerRadius" Value="10" />

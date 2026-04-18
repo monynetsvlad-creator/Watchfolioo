@@ -3,20 +3,136 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StackPanel Margin="16" Spacing="16">
-        <TextBlock
-            FontSize="22"
-            FontWeight="Bold"
-            Foreground="White"
-            Text="Налаштування" />
-        <TextBlock
-            FontSize="14"
-            Foreground="#888"
-            Text="Тут будуть налаштування додатку." />
-        <TextBlock
-            FontSize="14"
-            Foreground="#E50914"
-            Name="ParamText"
-            Text="" />
-    </StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16" Spacing="16">
+
+            <TextBlock
+                FontSize="22"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="Налаштування" />
+
+            <TextBlock
+                FontSize="13"
+                Foreground="#888"
+                Text="Оберіть жанри які вас цікавлять:" />
+
+            <WrapPanel Orientation="Horizontal">
+                <Border
+                    Background="#222"
+                    CornerRadius="15"
+                    Margin="4"
+                    Padding="12,6">
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="White"
+                        Text="Екшн" />
+                </Border>
+                <Border
+                    Background="#222"
+                    CornerRadius="15"
+                    Margin="4"
+                    Padding="12,6">
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="White"
+                        Text="Драма" />
+                </Border>
+                <Border
+                    Background="#222"
+                    CornerRadius="15"
+                    Margin="4"
+                    Padding="12,6">
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="White"
+                        Text="Жахи" />
+                </Border>
+                <Border
+                    Background="#222"
+                    CornerRadius="15"
+                    Margin="4"
+                    Padding="12,6">
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="White"
+                        Text="Комедія" />
+                </Border>
+                <Border
+                    Background="#222"
+                    CornerRadius="15"
+                    Margin="4"
+                    Padding="12,6">
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="White"
+                        Text="Фантастика" />
+                </Border>
+                <Border
+                    Background="#222"
+                    CornerRadius="15"
+                    Margin="4"
+                    Padding="12,6">
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="White"
+                        Text="Мультфільми" />
+                </Border>
+                <Border
+                    Background="#E50914"
+                    CornerRadius="15"
+                    Margin="4"
+                    Padding="12,6">
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="White"
+                        Text="Трилери" />
+                </Border>
+            </WrapPanel>
+
+
+            <Border
+                Background="#222"
+                Height="1"
+                Margin="0,8" />
+
+
+            <Border
+                Background="#1E1E1E"
+                CornerRadius="8"
+                Padding="14">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock
+                            FontSize="15"
+                            FontWeight="Medium"
+                            Foreground="White"
+                            Text="Тема оформлення" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="#888"
+                            Name="ThemeLabel"
+                            Text="Зараз: Темна" />
+                    </StackPanel>
+                    <Button
+                        Background="#E50914"
+                        Click="ThemeToggle_OnClick"
+                        Content="Змінити"
+                        CornerRadius="8"
+                        Foreground="White"
+                        Grid.Column="1"
+                        Name="ThemeToggleBtn"
+                        Padding="16,8" />
+                </Grid>
+            </Border>
+
+            <TextBlock
+                FontSize="14"
+                Foreground="#E50914"
+                Name="ParamText"
+                Text="" />
+
+        </StackPanel>
+    </ScrollViewer>
+
 </UserControl>

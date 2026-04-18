@@ -17,7 +17,7 @@
                 Foreground="#888"
                 Text="Оберіть жанри які вас цікавлять:" />
 
-            <WrapPanel Orientation="Horizontal">
+            <WrapPanel Name="GenrePanel" Orientation="Horizontal">
                 <Border
                     Background="#222"
                     CornerRadius="15"
@@ -90,12 +90,10 @@
                 </Border>
             </WrapPanel>
 
-
             <Border
                 Background="#222"
                 Height="1"
                 Margin="0,8" />
-
 
             <Border
                 Background="#1E1E1E"

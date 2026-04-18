@@ -27,4 +27,8 @@
       <AvaloniaResource Include="Assets\Images\Menu.jpg" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Resources\Styles.axaml" />
+    </ItemGroup>
+
 </Project>

@@ -11,6 +11,7 @@
         <entry key="Watchfolioo/Views/MainWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Views/MenuWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Views/MoviesWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
+        <entry key="Watchfolioo/Views/Resources.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Views/SettingsPage.axaml" value="Watchfolioo/Watchfolioo.csproj" />
       </map>
     </option>

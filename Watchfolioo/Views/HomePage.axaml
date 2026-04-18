@@ -3,15 +3,30 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StackPanel Margin="16" Spacing="16">
-        <TextBlock
-            FontSize="22"
-            FontWeight="Bold"
-            Foreground="White"
-            Text="Головна" />
-        <TextBlock
-            FontSize="14"
-            Foreground="#888"
-            Text="Ласкаво просимо до Watchfolio!" />
-    </StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="12,16,12,12" Spacing="20">
+
+            <StackPanel Spacing="10">
+                <TextBlock Classes="SectionTitle" Text="Популярні фільми" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="MoviesRow"
+                        Orientation="Horizontal"
+                        Spacing="10" />
+                </ScrollViewer>
+            </StackPanel>
+
+            <StackPanel Spacing="10">
+                <TextBlock Classes="SectionTitle" Text="Популярні серіали" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="SeriesRow"
+                        Orientation="Horizontal"
+                        Spacing="10" />
+                </ScrollViewer>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+
 </UserControl>

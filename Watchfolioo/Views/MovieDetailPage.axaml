@@ -17,10 +17,13 @@
             <Grid ColumnDefinitions="Auto,*">
                 <Border
                     Background="#1a1a2e"
+                    ClipToBounds="True"
                     CornerRadius="10"
                     Grid.Column="0"
                     Height="160"
-                    Width="110" />
+                    Width="110">
+                    <Image Name="MoviePoster" Stretch="UniformToFill" />
+                </Border>
 
                 <StackPanel
                     Grid.Column="1"

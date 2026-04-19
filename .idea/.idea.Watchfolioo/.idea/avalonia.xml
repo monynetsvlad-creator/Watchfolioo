@@ -9,6 +9,7 @@
         <entry key="Watchfolioo/Resources/DarkTheme.axaml.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Resources/LightTheme.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Resources/Styles.axaml" value="Watchfolioo/Watchfolioo.csproj" />
+        <entry key="Watchfolioo/Services/OmdbService.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Views/CatalogWindow.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Views/HomePage.axaml" value="Watchfolioo/Watchfolioo.csproj" />
         <entry key="Watchfolioo/Views/ListPage.axaml" value="Watchfolioo/Watchfolioo.csproj" />

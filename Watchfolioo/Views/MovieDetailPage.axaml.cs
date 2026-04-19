@@ -3,14 +3,19 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using System;
+using System.Net.Http;
 using Watchfolioo.Models;
+using Watchfolioo.Services;
 
 public partial class MovieDetailPage : UserControl
 {
     private Series _movie;
     private int _userRating = 0;
     private Action? _onBack;
+    private readonly HttpClient _http = new();
+    private readonly OmdbService _omdb = new();
 
     public MovieDetailPage(Series movie, Action? onBack = null)
     {
@@ -20,7 +25,7 @@ public partial class MovieDetailPage : UserControl
         LoadMovie();
     }
 
-    private void LoadMovie()
+    private async void LoadMovie()
     {
         MovieTitle.Text = _movie.Title ?? "Без назви";
         MovieType.Text = _movie.Type ?? "Фільм";
@@ -28,7 +33,7 @@ public partial class MovieDetailPage : UserControl
         MovieGenre.Text = _movie.Genre ?? "";
         MovieYear.Text = _movie.Year > 0 ? _movie.Year.ToString() : "";
         MovieDescription.Text = string.IsNullOrEmpty(_movie.Description)
-            ? "Опис відсутній"
+            ? "Завантаження..."
             : _movie.Description;
 
         if (!string.IsNullOrEmpty(_movie.UserComment))
@@ -39,6 +44,47 @@ public partial class MovieDetailPage : UserControl
             _userRating = (int)_movie.UserRating;
             UpdateStars(_userRating);
             UserRatingLabel.Text = $"Ваша оцінка: {_userRating}/5";
+        }
+
+        
+        if (string.IsNullOrEmpty(_movie.PosterUrl) || 
+            string.IsNullOrEmpty(_movie.Description))
+        {
+            var results = await _omdb.SearchMoviesAsync(_movie.Title ?? "");
+            if (results.Count > 0 && !string.IsNullOrEmpty(results[0].ImdbId))
+            {
+                var details = await _omdb.GetMovieDetailsAsync(results[0].ImdbId!);
+                if (details != null)
+                {
+                    _movie.PosterUrl   = details.PosterUrl;
+                    _movie.Description = details.Description;
+                    _movie.Rating      = details.Rating;
+                    _movie.Genre       = details.Genre;
+                    _movie.Year        = details.Year;
+
+                    MovieRating.Text      = $"★ {_movie.Rating}";
+                    MovieGenre.Text       = _movie.Genre ?? "";
+                    MovieYear.Text        = _movie.Year > 0 ? _movie.Year.ToString() : "";
+                    MovieDescription.Text = _movie.Description ?? "Опис відсутній";
+                }
+            }
+            else
+            {
+                MovieDescription.Text = "Опис відсутній";
+            }
+        }
+
+        
+        if (!string.IsNullOrEmpty(_movie.PosterUrl) && _movie.PosterUrl != "N/A")
+        {
+            try
+            {
+                var bytes = await _http.GetByteArrayAsync(_movie.PosterUrl);
+                using var ms = new System.IO.MemoryStream(bytes);
+                var bitmap = new Bitmap(ms);
+                MoviePoster.Source = bitmap;
+            }
+            catch { }
         }
     }
 

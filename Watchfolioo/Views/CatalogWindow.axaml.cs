@@ -28,7 +28,6 @@ public partial class CatalogWindow : Window
         "#b92b27", "#093028", "#232526", "#614385"
     };
 
-   
     private UserControl? _currentPage;
 
     public CatalogWindow()
@@ -50,17 +49,21 @@ public partial class CatalogWindow : Window
         };
 
         BuildCategories();
-        
         NavigateTo(new HomePage());
         SetActiveNav(HomeBtn);
     }
-    
+
+    public void NavigateToPage(UserControl page)
+    {
+        PageFrame.Content = page;
+    }
+
     private void NavigateTo(UserControl page)
     {
         _currentPage = page;
         PageFrame.Content = page;
     }
-    
+
     private void BuildCategories()
     {
         CategoryPanel.Children.Clear();
@@ -74,7 +77,7 @@ public partial class CatalogWindow : Window
             CategoryPanel.Children.Add(btn);
         }
     }
-    
+
     private void SetActiveNav(Button active)
     {
         var buttons = new[] { HomeBtn, MoviesBtn, SeriesBtn, FavBtn, SettingsBtn };
@@ -85,7 +88,7 @@ public partial class CatalogWindow : Window
         foreach (var child in ((StackPanel)active.Content!).Children.OfType<TextBlock>())
             child.Foreground = Brush.Parse("#E50914");
     }
-    
+
     private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         var text = SearchBox.Text ?? "";
@@ -119,6 +122,7 @@ public partial class CatalogWindow : Window
             NavigateTo(listPage);
         }
     }
+
     private void Nav_Home(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(HomeBtn);
@@ -152,7 +156,6 @@ public partial class CatalogWindow : Window
     private void Nav_Settings(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(SettingsBtn);
-        
         NavigateTo(new SettingsPage("користувач"));
     }
 }

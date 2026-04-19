@@ -125,14 +125,33 @@ public partial class ListPage : UserControl
         grid.Children.Add(textStack);
         grid.Children.Add(btnPanel);
 
-        return new Border
+        var cardBorder = new Border
         {
             Background = Brush.Parse("#1E1E1E"),
             CornerRadius = new CornerRadius(10),
             Padding = new Thickness(14),
             Margin = new Thickness(0, 0, 0, 8),
-            Child = grid
+            Child = grid,
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
         };
+
+      
+        cardBorder.PointerPressed += (s, e) =>
+        {
+            var detailPage = new MovieDetailPage(movie, () =>
+            {
+                RenderMovies();
+                var catalog = TopLevel.GetTopLevel(this) as Window;
+                if (catalog is CatalogWindow cw)
+                    cw.NavigateToPage(this);
+            });
+
+            var catalog = TopLevel.GetTopLevel(this) as Window;
+            if (catalog is CatalogWindow cw)
+                cw.NavigateToPage(detailPage);
+        };
+
+        return cardBorder;
     }
 
     private void AddMovie_OnClick(object? sender, RoutedEventArgs e)

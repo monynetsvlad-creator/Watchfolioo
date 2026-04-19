@@ -1,0 +1,168 @@
+﻿<UserControl
+    x:Class="Watchfolioo.Views.MovieDetailPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16" Spacing="16">
+
+            <Button
+                Background="Transparent"
+                Click="Back_OnClick"
+                Content="← Назад"
+                Foreground="#888"
+                HorizontalAlignment="Left"
+                Padding="0" />
+
+            <Grid ColumnDefinitions="Auto,*">
+                <Border
+                    Background="#1a1a2e"
+                    CornerRadius="10"
+                    Grid.Column="0"
+                    Height="160"
+                    Width="110" />
+
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="14,0,0,0"
+                    Spacing="8">
+                    <TextBlock
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Name="MovieTitle"
+                        Text="Назва"
+                        TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Border
+                            Background="#E50914"
+                            CornerRadius="4"
+                            Padding="6,2">
+                            <TextBlock
+                                FontSize="11"
+                                Foreground="White"
+                                Name="MovieType"
+                                Text="Фільм" />
+                        </Border>
+                        <TextBlock
+                            FontSize="13"
+                            Foreground="#FFD700"
+                            Name="MovieRating"
+                            Text="★ 0.0"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="#888"
+                        Name="MovieGenre"
+                        Text="Жанр" />
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="#888"
+                        Name="MovieYear"
+                        Text="" />
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Spacing="6">
+                <TextBlock
+                    FontSize="15"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Text="Опис" />
+                <TextBlock
+                    FontSize="13"
+                    Foreground="#BBBBBB"
+                    Name="MovieDescription"
+                    Text="Опис відсутній"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <Border Background="#222" Height="1" />
+
+            <StackPanel Spacing="8">
+                <TextBlock
+                    FontSize="15"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Text="Ваша оцінка" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button
+                        Classes="StarBtn"
+                        Click="Star1_Click"
+                        Content="★"
+                        Name="Star1" />
+                    <Button
+                        Classes="StarBtn"
+                        Click="Star2_Click"
+                        Content="★"
+                        Name="Star2" />
+                    <Button
+                        Classes="StarBtn"
+                        Click="Star3_Click"
+                        Content="★"
+                        Name="Star3" />
+                    <Button
+                        Classes="StarBtn"
+                        Click="Star4_Click"
+                        Content="★"
+                        Name="Star4" />
+                    <Button
+                        Classes="StarBtn"
+                        Click="Star5_Click"
+                        Content="★"
+                        Name="Star5" />
+                </StackPanel>
+                <TextBlock
+                    FontSize="12"
+                    Foreground="#888"
+                    Name="UserRatingLabel"
+                    Text="Ви ще не оцінили" />
+            </StackPanel>
+
+            <StackPanel Spacing="8">
+                <TextBlock
+                    FontSize="15"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Text="Ваш коментар" />
+                <TextBox
+                    AcceptsReturn="True"
+                    Background="#222"
+                    BorderThickness="0"
+                    CornerRadius="8"
+                    Foreground="White"
+                    Height="100"
+                    Name="CommentBox"
+                    PlaceholderText="Напишіть свій відгук..."
+                    TextWrapping="Wrap" />
+                <Button
+                    Background="#E50914"
+                    Click="SaveComment_OnClick"
+                    Content="Зберегти відгук"
+                    CornerRadius="8"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Padding="12,8" />
+                <TextBlock
+                    FontSize="12"
+                    Foreground="#4CAF50"
+                    IsVisible="False"
+                    Name="SavedLabel"
+                    Text="✓ Відгук збережено!" />
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+
+    <UserControl.Styles>
+        <Style Selector="Button.StarBtn">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#444" />
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="Padding" Value="2" />
+        </Style>
+    </UserControl.Styles>
+
+</UserControl>

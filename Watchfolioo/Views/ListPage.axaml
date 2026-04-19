@@ -3,8 +3,114 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ScrollViewer>
-        <WrapPanel Margin="20" x:Name="MoviesPanel" />
-    </ScrollViewer>
+    <Grid RowDefinitions="Auto,Auto,*">
 
+        <Grid
+            ColumnDefinitions="*,Auto"
+            Grid.Row="0"
+            Margin="16,16,16,8">
+            <TextBlock
+                FontSize="20"
+                FontWeight="Bold"
+                Foreground="White"
+                Grid.Column="0"
+                Name="PageTitle"
+                Text="Каталог"
+                VerticalAlignment="Center" />
+            <Button
+                Background="#E50914"
+                Click="AddMovie_OnClick"
+                Content="+ Додати"
+                CornerRadius="8"
+                Foreground="White"
+                Grid.Column="1"
+                Padding="12,6" />
+        </Grid>
+
+        <Border
+            Background="#1E1E1E"
+            CornerRadius="10"
+            Grid.Row="1"
+            IsVisible="False"
+            Margin="16,0,16,12"
+            Name="EditForm"
+            Padding="14">
+            <StackPanel Spacing="8">
+                <TextBlock
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Name="FormTitle"
+                    Text="Новий фільм" />
+                <TextBox
+                    Background="#222"
+                    BorderThickness="0"
+                    CornerRadius="6"
+                    Foreground="White"
+                    Name="InputTitle"
+                    PlaceholderText="Назва фільму" />
+                <TextBlock
+                    FontSize="12"
+                    Foreground="Red"
+                    IsVisible="False"
+                    Name="TitleError"
+                    Text="Введіть назву!" />
+                <Grid ColumnDefinitions="*,*">
+                    <TextBox
+                        Background="#222"
+                        BorderThickness="0"
+                        CornerRadius="6"
+                        Foreground="White"
+                        Grid.Column="0"
+                        Margin="0,0,4,0"
+                        Name="InputGenre"
+                        PlaceholderText="Жанр" />
+                    <TextBox
+                        Background="#222"
+                        BorderThickness="0"
+                        CornerRadius="6"
+                        Foreground="White"
+                        Grid.Column="1"
+                        Margin="4,0,0,0"
+                        Name="InputRating"
+                        PlaceholderText="Рейтинг (0-10)" />
+                </Grid>
+                <TextBlock
+                    FontSize="12"
+                    Foreground="Red"
+                    IsVisible="False"
+                    Name="RatingError"
+                    Text="Рейтинг має бути від 0 до 10!" />
+                <Grid ColumnDefinitions="*,*">
+                    <Button
+                        Background="#222"
+                        Click="CancelEdit_OnClick"
+                        Content="Скасувати"
+                        CornerRadius="6"
+                        Foreground="White"
+                        Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Margin="0,0,4,0" />
+                    <Button
+                        Background="#E50914"
+                        Click="SaveMovie_OnClick"
+                        Content="Зберегти"
+                        CornerRadius="6"
+                        Foreground="White"
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Margin="4,0,0,0" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel
+                Margin="16,0,16,16"
+                Name="MovieList"
+                Spacing="8" />
+        </ScrollViewer>
+
+    </Grid>
 </UserControl>

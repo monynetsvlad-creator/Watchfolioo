@@ -13,10 +13,16 @@ public partial class ListPage : UserControl
 {
     private ObservableCollection<Series> _movies = new();
     private Series? _editingMovie = null;
+    private CatalogWindow? _catalogWindow;
 
     public ListPage()
     {
         InitializeComponent();
+    }
+
+    public void SetCatalogWindow(CatalogWindow window)
+    {
+        _catalogWindow = window;
     }
 
     public void LoadMovies(List<Series> movies, string title = "Каталог")
@@ -135,20 +141,16 @@ public partial class ListPage : UserControl
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
         };
 
-      
         cardBorder.PointerPressed += (s, e) =>
         {
+            if (e.Source is Button) return;
+
+            var listPage = this;
             var detailPage = new MovieDetailPage(movie, () =>
             {
-                RenderMovies();
-                var catalog = TopLevel.GetTopLevel(this) as Window;
-                if (catalog is CatalogWindow cw)
-                    cw.NavigateToPage(this);
+                _catalogWindow?.NavigateToPage(listPage);
             });
-
-            var catalog = TopLevel.GetTopLevel(this) as Window;
-            if (catalog is CatalogWindow cw)
-                cw.NavigateToPage(detailPage);
+            _catalogWindow?.NavigateToPage(detailPage);
         };
 
         return cardBorder;
@@ -170,9 +172,9 @@ public partial class ListPage : UserControl
     {
         _editingMovie = movie;
         FormTitle.Text = "Редагувати фільм";
-        InputTitle.Text = movie.Title;
-        InputGenre.Text = movie.Genre;
-        InputRating.Text = movie.Rating;
+        InputTitle.Text = movie.Title ?? "";
+        InputGenre.Text = movie.Genre ?? "";
+        InputRating.Text = movie.Rating ?? "";
         TitleError.IsVisible = false;
         RatingError.IsVisible = false;
         EditForm.IsVisible = true;

@@ -17,4 +17,6 @@ public class Series
     public string? PosterUrl { get; set; }
     public string? ImdbId { get; set; }
     public string? TrailerUrl { get; set; }
+    
+    
 }

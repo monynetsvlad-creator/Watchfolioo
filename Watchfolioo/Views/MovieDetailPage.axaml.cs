@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using System;
+using System.IO;
 using System.Net.Http;
 using Watchfolioo.Models;
 using Watchfolioo.Services;
@@ -12,16 +13,14 @@ using Watchfolioo.Services;
 public partial class MovieDetailPage : UserControl
 {
     private Series _movie;
+    private Action? _goBack;
     private int _userRating = 0;
-    private Action? _onBack;
-    private readonly HttpClient _http = new();
-    private readonly OmdbService _omdb = new();
 
-    public MovieDetailPage(Series movie, Action? onBack = null)
+    public MovieDetailPage(Series movie, Action? goBack = null)
     {
         InitializeComponent();
         _movie = movie;
-        _onBack = onBack;
+        _goBack = goBack;
         LoadMovie();
     }
 
@@ -46,27 +45,36 @@ public partial class MovieDetailPage : UserControl
             UserRatingLabel.Text = $"Ваша оцінка: {_userRating}/5";
         }
 
-        
-        if (string.IsNullOrEmpty(_movie.PosterUrl) || 
+        if (string.IsNullOrEmpty(_movie.PosterUrl) ||
             string.IsNullOrEmpty(_movie.Description))
         {
-            var results = await _omdb.SearchMoviesAsync(_movie.Title ?? "");
-            if (results.Count > 0 && !string.IsNullOrEmpty(results[0].ImdbId))
-            {
-                var details = await _omdb.GetMovieDetailsAsync(results[0].ImdbId!);
-                if (details != null)
-                {
-                    _movie.PosterUrl   = details.PosterUrl;
-                    _movie.Description = details.Description;
-                    _movie.Rating      = details.Rating;
-                    _movie.Genre       = details.Genre;
-                    _movie.Year        = details.Year;
+            var omdb = new OmdbService();
+            Series? details = null;
 
-                    MovieRating.Text      = $"★ {_movie.Rating}";
-                    MovieGenre.Text       = _movie.Genre ?? "";
-                    MovieYear.Text        = _movie.Year > 0 ? _movie.Year.ToString() : "";
-                    MovieDescription.Text = _movie.Description ?? "Опис відсутній";
-                }
+            // Якщо є ImdbId — завантажуємо напряму
+            if (!string.IsNullOrEmpty(_movie.ImdbId))
+            {
+                details = await omdb.GetMovie(_movie.ImdbId);
+            }
+            else
+            {
+                var results = await omdb.SearchMovies(_movie.Title ?? "");
+                if (results.Count > 0 && !string.IsNullOrEmpty(results[0].ImdbId))
+                    details = await omdb.GetMovie(results[0].ImdbId!);
+            }
+
+            if (details != null)
+            {
+                _movie.PosterUrl   = details.PosterUrl;
+                _movie.Description = details.Description;
+                _movie.Rating      = details.Rating;
+                _movie.Genre       = details.Genre;
+                _movie.Year        = details.Year;
+
+                MovieRating.Text      = $"★ {_movie.Rating}";
+                MovieGenre.Text       = _movie.Genre ?? "";
+                MovieYear.Text        = _movie.Year > 0 ? _movie.Year.ToString() : "";
+                MovieDescription.Text = _movie.Description ?? "Опис відсутній";
             }
             else
             {
@@ -74,15 +82,15 @@ public partial class MovieDetailPage : UserControl
             }
         }
 
-        
+        // Завантажуємо постер
         if (!string.IsNullOrEmpty(_movie.PosterUrl) && _movie.PosterUrl != "N/A")
         {
             try
             {
-                var bytes = await _http.GetByteArrayAsync(_movie.PosterUrl);
-                using var ms = new System.IO.MemoryStream(bytes);
-                var bitmap = new Bitmap(ms);
-                MoviePoster.Source = bitmap;
+                using var http = new HttpClient();
+                var data = await http.GetByteArrayAsync(_movie.PosterUrl);
+                using var ms = new MemoryStream(data);
+                MoviePoster.Source = new Bitmap(ms);
             }
             catch { }
         }
@@ -97,11 +105,11 @@ public partial class MovieDetailPage : UserControl
                 : Brush.Parse("#444444");
     }
 
-    private void Star1_Click(object? sender, RoutedEventArgs e) => SetRating(1);
-    private void Star2_Click(object? sender, RoutedEventArgs e) => SetRating(2);
-    private void Star3_Click(object? sender, RoutedEventArgs e) => SetRating(3);
-    private void Star4_Click(object? sender, RoutedEventArgs e) => SetRating(4);
-    private void Star5_Click(object? sender, RoutedEventArgs e) => SetRating(5);
+    private void Star1_Click(object? s, RoutedEventArgs e) => SetRating(1);
+    private void Star2_Click(object? s, RoutedEventArgs e) => SetRating(2);
+    private void Star3_Click(object? s, RoutedEventArgs e) => SetRating(3);
+    private void Star4_Click(object? s, RoutedEventArgs e) => SetRating(4);
+    private void Star5_Click(object? s, RoutedEventArgs e) => SetRating(5);
 
     private void SetRating(int rating)
     {
@@ -128,6 +136,6 @@ public partial class MovieDetailPage : UserControl
 
     private void Back_OnClick(object? sender, RoutedEventArgs e)
     {
-        _onBack?.Invoke();
+        _goBack?.Invoke();
     }
 }

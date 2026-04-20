@@ -23,7 +23,16 @@ public partial class HomePage : UserControl
 
     private async Task LoadDataAsync()
     {
-        var movies = await _omdb.GetPopularAsync();
+        var titles = new[] { "Dune", "Oppenheimer", "Joker", "Interstellar", "The Witcher" };
+        var movies = new List<Series>();
+
+        foreach (var title in titles)
+        {
+            var results = await _omdb.SearchMovies(title);
+            if (results.Count > 0)
+                movies.Add(results[0]);
+        }
+
         await FillRowAsync(MoviesRow, movies);
     }
 
@@ -39,7 +48,6 @@ public partial class HomePage : UserControl
 
     private async Task<Border> BuildPosterCardAsync(Series movie)
     {
-        
         Avalonia.Media.IImage? poster = null;
         if (!string.IsNullOrEmpty(movie.PosterUrl) && movie.PosterUrl != "N/A")
         {
@@ -52,7 +60,6 @@ public partial class HomePage : UserControl
             catch { }
         }
 
-        
         Control posterControl;
         if (poster != null)
         {
@@ -146,7 +153,6 @@ public partial class HomePage : UserControl
             Children = { posterBorder, titleBlock, bottomRow }
         };
 
-        
         var cardBorder = new Border
         {
             Child = card,

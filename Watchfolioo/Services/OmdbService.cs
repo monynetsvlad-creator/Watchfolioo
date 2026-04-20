@@ -1,110 +1,89 @@
-﻿using System;
+﻿namespace Watchfolioo.Services;
+
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Watchfolioo.Models;
 
-namespace Watchfolioo.Services;
-
 public class OmdbService
 {
     private const string ApiKey = "d1196472";
     private const string BaseUrl = "https://www.omdbapi.com/";
-    private readonly HttpClient _http = new();
+    private HttpClient http = new HttpClient();
 
-    public async Task<List<Series>> SearchMoviesAsync(string query)
+    public async Task<List<Series>> SearchMovies(string query)
     {
-        var result = new List<Series>();
+        var list = new List<Series>();
         try
         {
-            var url = $"{BaseUrl}?s={Uri.EscapeDataString(query)}&apikey={ApiKey}";
-            var response = await _http.GetStringAsync(url);
+            var url = BaseUrl + "?apikey=" + ApiKey + "&s=" + query;
+            Console.WriteLine($"SearchMovies запит: {url}");
+            var response = await http.GetStringAsync(url);
+            Console.WriteLine($"SearchMovies відповідь: {response.Substring(0, Math.Min(200, response.Length))}");
             var json = JObject.Parse(response);
 
-            if (json["Response"]?.ToString() != "True") 
-                return result;
-
-            var items = json["Search"] as JArray;
-            if (items == null) 
-                return result;
-
-            foreach (var item in items)
+            if (json["Response"]?.ToString() == "True")
             {
-                var type = item["Type"]?.ToString() switch
+                var items = (JArray)json["Search"];
+                foreach (var item in items)
                 {
-                    "movie"  => "Фільм",
-                    "series" => "Серіал",
-                    _        => "Фільм"
-                };
-
-                result.Add(new Series
-                {
-                    Title     = item["Title"]?.ToString() ?? "",
-                    Type      = type,
-                    Year      = int.TryParse(item["Year"]?.ToString()?.Replace("–", "").Trim(), out int y) ? y : 0,
-                    PosterUrl = item["Poster"]?.ToString() ?? "",
-                    ImdbId    = item["imdbID"]?.ToString() ?? ""
-                });
+                    list.Add(new Series
+                    {
+                        Title     = item["Title"]?.ToString(),
+                        ImdbId    = item["imdbID"]?.ToString(),
+                        PosterUrl = item["Poster"]?.ToString() != "N/A"
+                            ? item["Poster"]?.ToString()
+                            : ""
+                    });
+                }
+            }
+            else
+            {
+                Console.WriteLine($"SearchMovies помилка: {json["Error"]}");
             }
         }
-        catch { }
-        return result;
+        catch (Exception ex)
+        {
+            Console.WriteLine($"SearchMovies виключення: {ex.Message}");
+        }
+        return list;
     }
 
-    public async Task<Series?> GetMovieDetailsAsync(string imdbId)
+    public async Task<Series?> GetMovie(string imdbId)
     {
         try
         {
-            var url = $"{BaseUrl}?i={imdbId}&apikey={ApiKey}";
-            var response = await _http.GetStringAsync(url);
+            var url = BaseUrl + "?apikey=" + ApiKey + "&i=" + imdbId + "&plot=full";
+            Console.WriteLine($"GetMovie запит: {url}");
+            var response = await http.GetStringAsync(url);
+            Console.WriteLine($"GetMovie відповідь: {response.Substring(0, Math.Min(200, response.Length))}");
             var json = JObject.Parse(response);
 
-            if (json["Response"]?.ToString() != "True") 
-                return null;
-
-            var type = json["Type"]?.ToString() switch
+            if (json["Response"]?.ToString() == "True")
             {
-                "movie"  => "Фільм",
-                "series" => "Серіал",
-                _        => "Фільм"
-            };
-
-            return new Series
+                return new Series
+                {
+                    Title       = json["Title"]?.ToString(),
+                    Description = json["Plot"]?.ToString(),
+                    Genre       = json["Genre"]?.ToString(),
+                    Rating      = json["imdbRating"]?.ToString(),
+                    PosterUrl   = json["Poster"]?.ToString() != "N/A"
+                        ? json["Poster"]?.ToString()
+                        : "",
+                    ImdbId = imdbId
+                };
+            }
+            else
             {
-                Title       = json["Title"]?.ToString() ?? "",
-                Type        = type,
-                Genre       = json["Genre"]?.ToString() ?? "",
-                Rating      = json["imdbRating"]?.ToString() ?? "",
-                Description = json["Plot"]?.ToString() ?? "",
-                PosterUrl   = json["Poster"]?.ToString() ?? "",
-                Year        = int.TryParse(json["Year"]?.ToString(), out int y) ? y : 0,
-                ImdbId      = imdbId
-            };
+                Console.WriteLine($"GetMovie помилка: {json["Error"]}");
+            }
         }
-        catch { }
-        return null;
-    }
-
-    public async Task<List<Series>> GetPopularAsync()
-    {
-        var popularIds = new[] 
-        { 
-            "tt15239678", 
-            "tt15398776", 
-            "tt1375666", 
-            "tt0816692", 
-            "tt4154796", 
-            "tt0468569" 
-        };
-
-        var result = new List<Series>();
-        foreach (var id in popularIds)
+        catch (Exception ex)
         {
-            var movie = await GetMovieDetailsAsync(id);
-            if (movie != null) 
-                result.Add(movie);
+            Console.WriteLine($"GetMovie виключення: {ex.Message}");
         }
-        return result;
+        return null;
     }
 }

@@ -36,16 +36,16 @@ public partial class CatalogWindow : Window
 
         _allMovies = new List<Series>
         {
-            new Series { Title = "Дюна: Частина 2",  Genre = "Екшн",    Type = "Фільм",  Rating = "8.7" },
-            new Series { Title = "Оппенгаймер",       Genre = "Драма",   Type = "Фільм",  Rating = "8.4" },
-            new Series { Title = "Джокер",             Genre = "Драма",   Type = "Фільм",  Rating = "8.5" },
-            new Series { Title = "Інтерстеллар",       Genre = "Екшн",    Type = "Фільм",  Rating = "8.6" },
-            new Series { Title = "Гра в кальмара 2",  Genre = "Жахи",    Type = "Серіал", Rating = "9.1" },
-            new Series { Title = "Відьмак",            Genre = "Екшн",    Type = "Серіал", Rating = "8.2" },
-            new Series { Title = "Хаус Дракона",       Genre = "Драма",   Type = "Серіал", Rating = "8.6" },
-            new Series { Title = "Чорне дзеркало",     Genre = "Жахи",    Type = "Серіал", Rating = "9.3" },
-            new Series { Title = "Форс мажор",         Genre = "Комедія", Type = "Серіал", Rating = "8.1" },
-            new Series { Title = "Той, хто вижив",     Genre = "Екшн",    Type = "Серіал", Rating = "8.9" },
+            new Series { Title = "Дюна: Частина 2",  Genre = "Екшн",    Type = "Фільм",  Rating = "8.7", ImdbId = "tt15239678" },
+            new Series { Title = "Оппенгаймер",       Genre = "Драма",   Type = "Фільм",  Rating = "8.4", ImdbId = "tt15398776" },
+            new Series { Title = "Джокер",             Genre = "Драма",   Type = "Фільм",  Rating = "8.5", ImdbId = "tt7286456"  },
+            new Series { Title = "Інтерстеллар",       Genre = "Екшн",    Type = "Фільм",  Rating = "8.6", ImdbId = "tt0816692"  },
+            new Series { Title = "Гра в кальмара 2",  Genre = "Жахи",    Type = "Серіал", Rating = "9.1", ImdbId = "tt21209876" },
+            new Series { Title = "Відьмак",            Genre = "Екшн",    Type = "Серіал", Rating = "8.2", ImdbId = "tt5180504"  },
+            new Series { Title = "Хаус Дракона",       Genre = "Драма",   Type = "Серіал", Rating = "8.6", ImdbId = "tt11198330" },
+            new Series { Title = "Чорне дзеркало",     Genre = "Жахи",    Type = "Серіал", Rating = "9.3", ImdbId = "tt2085059"  },
+            new Series { Title = "Форс мажор",         Genre = "Комедія", Type = "Серіал", Rating = "8.1", ImdbId = "tt1632701"  },
+            new Series { Title = "Той, хто вижив",     Genre = "Екшн",    Type = "Серіал", Rating = "8.9", ImdbId = "tt2741602"  },
         };
 
         BuildCategories();
@@ -62,6 +62,13 @@ public partial class CatalogWindow : Window
     {
         _currentPage = page;
         PageFrame.Content = page;
+    }
+
+    private ListPage CreateListPage()
+    {
+        var listPage = new ListPage();
+        listPage.SetCatalogWindow(this);
+        return listPage;
     }
 
     private void BuildCategories()
@@ -102,7 +109,7 @@ public partial class CatalogWindow : Window
             var results = _allMovies
                 .Where(m => m.Title.ToLower().Contains(text.ToLower()))
                 .ToList();
-            var listPage = new ListPage();
+            var listPage = CreateListPage();
             listPage.LoadMovies(results);
             NavigateTo(listPage);
         }
@@ -117,7 +124,7 @@ public partial class CatalogWindow : Window
             var filtered = tag == "Усі"
                 ? _allMovies
                 : _allMovies.Where(m => m.Genre == tag).ToList();
-            var listPage = new ListPage();
+            var listPage = CreateListPage();
             listPage.LoadMovies(filtered);
             NavigateTo(listPage);
         }
@@ -132,7 +139,7 @@ public partial class CatalogWindow : Window
     private void Nav_Movies(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(MoviesBtn);
-        var listPage = new ListPage();
+        var listPage = CreateListPage();
         listPage.LoadMovies(_allMovies.Where(m => m.Type == "Фільм").ToList());
         NavigateTo(listPage);
     }
@@ -140,7 +147,7 @@ public partial class CatalogWindow : Window
     private void Nav_Series(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(SeriesBtn);
-        var listPage = new ListPage();
+        var listPage = CreateListPage();
         listPage.LoadMovies(_allMovies.Where(m => m.Type == "Серіал").ToList());
         NavigateTo(listPage);
     }
@@ -148,7 +155,7 @@ public partial class CatalogWindow : Window
     private void Nav_Fav(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(FavBtn);
-        var listPage = new ListPage();
+        var listPage = CreateListPage();
         listPage.LoadMovies(_allMovies.Where(m => m.IsFavorite).ToList(), "Обране");
         NavigateTo(listPage);
     }

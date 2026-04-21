@@ -64,6 +64,18 @@
                         Foreground="#888"
                         Name="MovieYear"
                         Text="" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock
+                            FontSize="13"
+                            Foreground="#888"
+                            Name="MovieRuntime"
+                            Text="" />
+                        <TextBlock
+                            FontSize="13"
+                            Foreground="#888"
+                            Name="MovieSeasons"
+                            Text="" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
 

@@ -35,6 +35,9 @@ public partial class MovieDetailPage : UserControl
             ? "Завантаження..."
             : _movie.Description;
 
+        MovieRuntime.Text = !string.IsNullOrEmpty(_movie.Runtime) ? $"⏱ {_movie.Runtime}" : "";
+        MovieSeasons.Text = !string.IsNullOrEmpty(_movie.TotalSeasons) ? $"📺 {_movie.TotalSeasons} сезонів" : "";
+
         if (!string.IsNullOrEmpty(_movie.UserComment))
             CommentBox.Text = _movie.UserComment;
 
@@ -51,7 +54,6 @@ public partial class MovieDetailPage : UserControl
             var omdb = new OmdbService();
             Series? details = null;
 
-            // Якщо є ImdbId — завантажуємо напряму
             if (!string.IsNullOrEmpty(_movie.ImdbId))
             {
                 details = await omdb.GetMovie(_movie.ImdbId);
@@ -65,16 +67,20 @@ public partial class MovieDetailPage : UserControl
 
             if (details != null)
             {
-                _movie.PosterUrl   = details.PosterUrl;
-                _movie.Description = details.Description;
-                _movie.Rating      = details.Rating;
-                _movie.Genre       = details.Genre;
-                _movie.Year        = details.Year;
+                _movie.PosterUrl     = details.PosterUrl;
+                _movie.Description   = details.Description;
+                _movie.Rating        = details.Rating;
+                _movie.Genre         = details.Genre;
+                _movie.Year          = details.Year;
+                _movie.Runtime       = details.Runtime;
+                _movie.TotalSeasons  = details.TotalSeasons;
 
                 MovieRating.Text      = $"★ {_movie.Rating}";
                 MovieGenre.Text       = _movie.Genre ?? "";
                 MovieYear.Text        = _movie.Year > 0 ? _movie.Year.ToString() : "";
                 MovieDescription.Text = _movie.Description ?? "Опис відсутній";
+                MovieRuntime.Text     = !string.IsNullOrEmpty(_movie.Runtime) ? $"⏱ {_movie.Runtime}" : "";
+                MovieSeasons.Text     = !string.IsNullOrEmpty(_movie.TotalSeasons) ? $"📺 {_movie.TotalSeasons} сезонів" : "";
             }
             else
             {
@@ -82,7 +88,6 @@ public partial class MovieDetailPage : UserControl
             }
         }
 
-        // Завантажуємо постер
         if (!string.IsNullOrEmpty(_movie.PosterUrl) && _movie.PosterUrl != "N/A")
         {
             try

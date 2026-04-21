@@ -18,5 +18,6 @@ public class Series
     public string? ImdbId { get; set; }
     public string? TrailerUrl { get; set; }
     
-    
+    public string? Runtime { get; set; }    
+    public string? TotalSeasons { get; set; } 
 }

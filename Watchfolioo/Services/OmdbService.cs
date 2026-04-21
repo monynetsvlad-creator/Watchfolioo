@@ -65,14 +65,16 @@ public class OmdbService
             {
                 return new Series
                 {
-                    Title       = json["Title"]?.ToString(),
-                    Description = json["Plot"]?.ToString(),
-                    Genre       = json["Genre"]?.ToString(),
-                    Rating      = json["imdbRating"]?.ToString(),
-                    PosterUrl   = json["Poster"]?.ToString() != "N/A"
+                    Title        = json["Title"]?.ToString(),
+                    Description  = json["Plot"]?.ToString(),
+                    Genre        = json["Genre"]?.ToString(),
+                    Rating       = json["imdbRating"]?.ToString(),
+                    PosterUrl    = json["Poster"]?.ToString() != "N/A"
                         ? json["Poster"]?.ToString()
                         : "",
-                    ImdbId = imdbId
+                    ImdbId       = imdbId,
+                    Runtime      = json["Runtime"]?.ToString(),
+                    TotalSeasons = json["totalSeasons"]?.ToString()
                 };
             }
             else

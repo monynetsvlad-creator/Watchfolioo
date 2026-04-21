@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Linq;
 using Watchfolioo.Models;
 using Watchfolioo.Services;
 
@@ -93,6 +94,50 @@ public partial class HomePage : UserControl
         await FillRowAsync(NewSeasonsRow, newSeasonsList);
         await FillRowAsync(ActionRow, action);
         await FillRowAsync(ComedyRow, comedy);
+
+        // Завантажуємо деталі для кожного фільму
+        var omdb = new OmdbService();
+        var allLoaded = new List<Series>();
+        allLoaded.AddRange(movies);
+        allLoaded.AddRange(newMoviesList);
+        allLoaded.AddRange(action);
+        allLoaded.AddRange(comedy);
+
+        var allSeriesLoaded = new List<Series>();
+        allSeriesLoaded.AddRange(series);
+        allSeriesLoaded.AddRange(trendingList);
+        allSeriesLoaded.AddRange(newSeasonsList);
+
+        foreach (var movie in allLoaded)
+        {
+            if (!string.IsNullOrEmpty(movie.ImdbId) && string.IsNullOrEmpty(movie.Genre))
+            {
+                var details = await omdb.GetMovie(movie.ImdbId);
+                if (details != null)
+                {
+                    movie.Genre = details.Genre;
+                    movie.Rating = details.Rating;
+                    movie.Year = details.Year;
+                }
+            }
+        }
+
+        foreach (var s in allSeriesLoaded)
+        {
+            if (!string.IsNullOrEmpty(s.ImdbId) && string.IsNullOrEmpty(s.Genre))
+            {
+                var details = await omdb.GetMovie(s.ImdbId);
+                if (details != null)
+                {
+                    s.Genre = details.Genre;
+                    s.Rating = details.Rating;
+                    s.Year = details.Year;
+                }
+            }
+        }
+
+        _catalogWindow?.AddMoviesToCatalog(allLoaded);
+        _catalogWindow?.AddMoviesToCatalog(allSeriesLoaded);
     }
 
     private async Task FillRowAsync(StackPanel row, List<Series> items)

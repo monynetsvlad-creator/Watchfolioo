@@ -59,6 +59,17 @@ public partial class CatalogWindow : Window
         PageFrame.Content = page;
     }
 
+    public void AddMoviesToCatalog(List<Series> movies)
+    {
+        foreach (var movie in movies)
+        {
+            bool exists = _allMovies.Any(m =>
+                m.Title?.ToLower() == movie.Title?.ToLower());
+            if (!exists)
+                _allMovies.Add(movie);
+        }
+    }
+
     private void NavigateTo(UserControl page)
     {
         _currentPage = page;

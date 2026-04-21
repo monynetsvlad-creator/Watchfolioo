@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using System.Collections.Generic;
 using System.Linq;
 using Watchfolioo.Models;
+using Watchfolioo.Services;
 
 public partial class CatalogWindow : Window
 {
@@ -96,23 +97,42 @@ public partial class CatalogWindow : Window
             child.Foreground = Brush.Parse("#E50914");
     }
 
-    private void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
+    private async void SearchBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         var text = SearchBox.Text ?? "";
         if (string.IsNullOrWhiteSpace(text))
         {
             NavigateTo(new HomePage());
             SetActiveNav(HomeBtn);
+            return;
         }
-        else
+
+        // Шукаємо локально
+        var localResults = _allMovies
+            .Where(m => m.Title != null && m.Title.ToLower().Contains(text.ToLower()))
+            .ToList();
+
+        // Шукаємо в OMDB
+        var omdb = new OmdbService();
+        var omdbResults = await omdb.SearchMovies(text);
+
+        // Додаємо нові фільми з OMDB яких ще немає в каталозі
+        foreach (var omdbMovie in omdbResults)
         {
-            var results = _allMovies
-                .Where(m => m.Title.ToLower().Contains(text.ToLower()))
-                .ToList();
-            var listPage = CreateListPage();
-            listPage.LoadMovies(results);
-            NavigateTo(listPage);
+            bool exists = _allMovies.Any(m =>
+                m.Title?.ToLower() == omdbMovie.Title?.ToLower());
+
+            if (!exists)
+            {
+                omdbMovie.Type = "Фільм";
+                _allMovies.Add(omdbMovie);
+                localResults.Add(omdbMovie);
+            }
         }
+
+        var listPage = CreateListPage();
+        listPage.LoadMovies(localResults);
+        NavigateTo(listPage);
     }
 
     private void Category_OnClick(object? sender, RoutedEventArgs e)

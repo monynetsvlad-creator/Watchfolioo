@@ -14,26 +14,85 @@ public partial class HomePage : UserControl
 {
     private readonly OmdbService _omdb = new();
     private readonly HttpClient _http = new();
+    private CatalogWindow? _catalogWindow;
 
     public HomePage()
     {
         InitializeComponent();
-        Loaded += async (s, e) => await LoadDataAsync();
+        Loaded += async (s, e) =>
+        {
+            _catalogWindow = TopLevel.GetTopLevel(this) as CatalogWindow;
+            await LoadDataAsync();
+        };
     }
 
     private async Task LoadDataAsync()
     {
-        var titles = new[] { "Dune", "Oppenheimer", "Joker", "Interstellar", "The Witcher" };
-        var movies = new List<Series>();
+        var movieTitles = new[] { "Dune", "Oppenheimer", "Joker", "Interstellar", "Inception", "The Dark Knight", "Avatar", "Gladiator", "Titanic", "The Matrix" };
+        var seriesTitles = new[] { "The Witcher", "Black Mirror", "Squid Game", "House of the Dragon", "Breaking Bad", "Stranger Things", "Game of Thrones", "Peaky Blinders", "The Crown", "Narcos" };
+        var newMovies2026 = new[] { "Captain America Brave New World", "Thunderbolts", "Mission Impossible Final Reckoning", "Jurassic World Rebirth", "Superman", "The Fantastic Four", "Mortal Kombat 2", "Sinners", "Drop", "Warfare" };
+        var trending = new[] { "Adolescence", "The Last of Us", "White Lotus", "Severance", "The Bear", "Andor", "Daredevil Born Again", "Paradise", "Alert", "Your Friendly Neighborhood Spider-Man" };
+        var newSeasons2026 = new[] { "Stranger Things", "Squid Game", "The Witcher", "Peaky Blinders", "Yellowstone", "Ozark", "Succession", "Ted Lasso", "Euphoria", "The Boys" };
+        var actionTitles = new[] { "John Wick", "Mad Max Fury Road", "Die Hard", "Mission Impossible", "Top Gun Maverick", "The Raid", "Heat", "Predator", "Speed", "Face Off" };
+        var comedyTitles = new[] { "The Grand Budapest Hotel", "Superbad", "Step Brothers", "Anchorman", "Bridesmaids", "The Hangover", "Dumb and Dumber", "Clueless", "Mean Girls", "Ferris Bueller" };
 
-        foreach (var title in titles)
+        var movies = new List<Series>();
+        var series = new List<Series>();
+        var newMoviesList = new List<Series>();
+        var trendingList = new List<Series>();
+        var newSeasonsList = new List<Series>();
+        var action = new List<Series>();
+        var comedy = new List<Series>();
+
+        foreach (var title in movieTitles)
         {
             var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0)
-                movies.Add(results[0]);
+            if (results.Count > 0) { results[0].Type = "Фільм"; movies.Add(results[0]); }
+        }
+
+        foreach (var title in seriesTitles)
+        {
+            var results = await _omdb.SearchMovies(title);
+            if (results.Count > 0) { results[0].Type = "Серіал"; series.Add(results[0]); }
+        }
+
+        foreach (var title in newMovies2026)
+        {
+            var results = await _omdb.SearchMovies(title);
+            if (results.Count > 0) { results[0].Type = "Фільм"; newMoviesList.Add(results[0]); }
+        }
+
+        foreach (var title in trending)
+        {
+            var results = await _omdb.SearchMovies(title);
+            if (results.Count > 0) { results[0].Type = "Серіал"; trendingList.Add(results[0]); }
+        }
+
+        foreach (var title in newSeasons2026)
+        {
+            var results = await _omdb.SearchMovies(title);
+            if (results.Count > 0) { results[0].Type = "Серіал"; newSeasonsList.Add(results[0]); }
+        }
+
+        foreach (var title in actionTitles)
+        {
+            var results = await _omdb.SearchMovies(title);
+            if (results.Count > 0) { results[0].Type = "Фільм"; action.Add(results[0]); }
+        }
+
+        foreach (var title in comedyTitles)
+        {
+            var results = await _omdb.SearchMovies(title);
+            if (results.Count > 0) { results[0].Type = "Фільм"; comedy.Add(results[0]); }
         }
 
         await FillRowAsync(MoviesRow, movies);
+        await FillRowAsync(SeriesRow, series);
+        await FillRowAsync(NewMoviesRow, newMoviesList);
+        await FillRowAsync(TrendingRow, trendingList);
+        await FillRowAsync(NewSeasonsRow, newSeasonsList);
+        await FillRowAsync(ActionRow, action);
+        await FillRowAsync(ComedyRow, comedy);
     }
 
     private async Task FillRowAsync(StackPanel row, List<Series> items)
@@ -161,16 +220,14 @@ public partial class HomePage : UserControl
 
         cardBorder.PointerPressed += (s, e) =>
         {
+            if (_catalogWindow == null) return;
+
+            var homePageRef = this;
             var detailPage = new MovieDetailPage(movie, () =>
             {
-                var catalog = TopLevel.GetTopLevel(this) as Window;
-                if (catalog is CatalogWindow cw)
-                    cw.NavigateToPage(this);
+                _catalogWindow.NavigateToPage(homePageRef);
             });
-
-            var catalog = TopLevel.GetTopLevel(this) as Window;
-            if (catalog is CatalogWindow cw)
-                cw.NavigateToPage(detailPage);
+            _catalogWindow.NavigateToPage(detailPage);
         };
 
         return cardBorder;

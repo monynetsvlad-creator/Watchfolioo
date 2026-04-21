@@ -26,6 +26,56 @@
                 </ScrollViewer>
             </StackPanel>
 
+            <StackPanel Spacing="10">
+                <TextBlock Classes="SectionTitle" Text="Нові фільми 2026" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="NewMoviesRow"
+                        Orientation="Horizontal"
+                        Spacing="10" />
+                </ScrollViewer>
+            </StackPanel>
+
+            <StackPanel Spacing="10">
+                <TextBlock Classes="SectionTitle" Text="Зараз шукають" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="TrendingRow"
+                        Orientation="Horizontal"
+                        Spacing="10" />
+                </ScrollViewer>
+            </StackPanel>
+
+            <StackPanel Spacing="10">
+                <TextBlock Classes="SectionTitle" Text="Нові сезони 2026" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="NewSeasonsRow"
+                        Orientation="Horizontal"
+                        Spacing="10" />
+                </ScrollViewer>
+            </StackPanel>
+
+            <StackPanel Spacing="10">
+                <TextBlock Classes="SectionTitle" Text="Топ бойовики" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="ActionRow"
+                        Orientation="Horizontal"
+                        Spacing="10" />
+                </ScrollViewer>
+            </StackPanel>
+
+            <StackPanel Spacing="10">
+                <TextBlock Classes="SectionTitle" Text="Топ комедії" />
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel
+                        Name="ComedyRow"
+                        Orientation="Horizontal"
+                        Spacing="10" />
+                </ScrollViewer>
+            </StackPanel>
+
         </StackPanel>
     </ScrollViewer>
 

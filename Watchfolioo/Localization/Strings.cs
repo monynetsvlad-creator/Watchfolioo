@@ -1,10 +1,47 @@
 ﻿namespace Watchfolioo.Localization;
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 public static class Strings
 {
-    public static string CurrentLanguage { get; private set; } = "uk";
+    private const string LangFile = "language.txt";
+
+    public static string CurrentLanguage { get; private set; } = LoadSavedLanguage();
+
+    private static string LoadSavedLanguage()
+    {
+        try
+        {
+            if (File.Exists(LangFile))
+                return File.ReadAllText(LangFile).Trim();
+        }
+        catch { }
+        return "uk";
+    }
+
+    public static void SetLanguage(string lang)
+    {
+        if (_translations.ContainsKey(lang))
+        {
+            CurrentLanguage = lang;
+            try { File.WriteAllText(LangFile, lang); } catch { }
+            LanguageChanged?.Invoke();
+        }
+    }
+
+    public static event Action? LanguageChanged;
+
+    public static string Get(string key)
+    {
+        if (_translations.TryGetValue(CurrentLanguage, out var lang) &&
+            lang.TryGetValue(key, out var value))
+            return value;
+        if (_translations["uk"].TryGetValue(key, out var fallback))
+            return fallback;
+        return key;
+    }
 
     private static readonly Dictionary<string, Dictionary<string, string>> _translations = new()
     {
@@ -20,8 +57,8 @@ public static class Strings
             ["popular_movies"]   = "Популярні фільми",
             ["popular_series"]   = "Популярні серіали",
             ["new_movies_2026"]  = "Нові фільми 2026",
-            ["trending"]         = "Зараз шукають",
-            ["new_seasons"]      = "Нові сезони 2026",
+            ["searching_now"]    = "Зараз шукають",
+            ["new_seasons_2026"] = "Нові сезони 2026",
             ["top_action"]       = "Топ бойовики",
             ["top_comedy"]       = "Топ комедії",
             ["description"]      = "Опис",
@@ -52,6 +89,38 @@ public static class Strings
             ["login_taken"]      = "Цей логін уже зайнятий!",
             ["write_review"]     = "Напишіть свій відгук...",
             ["seasons"]          = "сезонів",
+            ["no_description"]   = "Опис відсутній",
+            ["loading"]          = "Завантаження...",
+            ["new_movie"]        = "Новий фільм",
+            ["edit_movie"]       = "Редагувати фільм",
+            ["save"]             = "Зберегти",
+            ["cancel"]           = "Скасувати",
+            ["title_error"]      = "Введіть назву!",
+            ["rating_error"]     = "Рейтинг має бути від 0 до 10!",
+            ["search_results"]   = "Результати пошуку",
+            ["favorites"]        = "Обране",
+            ["empty_favorites"]  = "Ще нічого не додано до обраного",
+            ["genre_all"]        = "Усі",
+            ["genre_action"]     = "Екшн",
+            ["genre_drama"]      = "Драма",
+            ["genre_horror"]     = "Жахи",
+            ["genre_comedy"]     = "Комедія",
+            ["genre_scifi"]      = "Фантастика",
+            ["genre_animation"]  = "Мультфільми",
+            ["genre_thriller"]   = "Трилери",
+            ["type_movie"]       = "Фільм",
+            ["type_series"]      = "Серіал",
+            ["welcome"]          = "Ласкаво просимо до Watchfolio!",
+            ["enter_credentials"] = "Введіть свої дані для входу",
+            ["create_account"]   = "Створіть новий акаунт",
+            ["settings_title"]    = "Налаштування",
+            ["select_genres"]     = "Оберіть жанри, які вас цікавлять:",
+            ["theme_title"]       = "Тема",
+            ["theme_current"]     = "Поточна: ",
+            ["theme_dark"]        = "Темна",
+            ["theme_light"]       = "Світла",
+            ["theme_change_btn"]  = "Змінити",
+            ["interface_lang"]    = "Мова інтерфейсу",
         },
         ["en"] = new()
         {
@@ -65,8 +134,8 @@ public static class Strings
             ["popular_movies"]   = "Popular Movies",
             ["popular_series"]   = "Popular Series",
             ["new_movies_2026"]  = "New Movies 2026",
-            ["trending"]         = "Trending Now",
-            ["new_seasons"]      = "New Seasons 2026",
+            ["searching_now"]    = "Trending Now",
+            ["new_seasons_2026"] = "New Seasons 2026",
             ["top_action"]       = "Top Action",
             ["top_comedy"]       = "Top Comedy",
             ["description"]      = "Description",
@@ -97,6 +166,38 @@ public static class Strings
             ["login_taken"]      = "This login is already taken!",
             ["write_review"]     = "Write your review...",
             ["seasons"]          = "seasons",
+            ["no_description"]   = "No description",
+            ["loading"]          = "Loading...",
+            ["new_movie"]        = "New Movie",
+            ["edit_movie"]       = "Edit Movie",
+            ["save"]             = "Save",
+            ["cancel"]           = "Cancel",
+            ["title_error"]      = "Enter title!",
+            ["rating_error"]     = "Rating must be between 0 and 10!",
+            ["search_results"]   = "Search Results",
+            ["favorites"]        = "Favorites",
+            ["empty_favorites"]  = "Nothing added to favorites yet",
+            ["genre_all"]        = "All",
+            ["genre_action"]     = "Action",
+            ["genre_drama"]      = "Drama",
+            ["genre_horror"]     = "Horror",
+            ["genre_comedy"]     = "Comedy",
+            ["genre_scifi"]      = "Sci-Fi",
+            ["genre_animation"]  = "Animation",
+            ["genre_thriller"]   = "Thriller",
+            ["type_movie"]       = "Movie",
+            ["type_series"]      = "Series",
+            ["welcome"]          = "Welcome to Watchfolio!",
+            ["enter_credentials"] = "Enter your credentials",
+            ["create_account"]   = "Create a new account",
+            ["settings_title"]    = "Settings",
+            ["select_genres"]     = "Select genres you are interested in:",
+            ["theme_title"]       = "Theme",
+            ["theme_current"]     = "Current: ",
+            ["theme_dark"]        = "Dark",
+            ["theme_light"]       = "Light",
+            ["theme_change_btn"]  = "Change",
+            ["interface_lang"]    = "Interface Language",
         },
         ["pl"] = new()
         {
@@ -142,6 +243,30 @@ public static class Strings
             ["login_taken"]      = "Ten login jest już zajęty!",
             ["write_review"]     = "Napisz swoją recenzję...",
             ["seasons"]          = "sezonów",
+            ["no_description"]   = "Brak opisu",
+            ["loading"]          = "Ładowanie...",
+            ["new_movie"]        = "Nowy film",
+            ["edit_movie"]       = "Edytuj film",
+            ["save"]             = "Zapisz",
+            ["cancel"]           = "Anuluj",
+            ["title_error"]      = "Wprowadź tytuł!",
+            ["rating_error"]     = "Ocena musi być od 0 do 10!",
+            ["search_results"]   = "Wyniki wyszukiwania",
+            ["favorites"]        = "Ulubione",
+            ["empty_favorites"]  = "Nic nie dodano do ulubionych",
+            ["genre_all"]        = "Wszystkie",
+            ["genre_action"]     = "Akcja",
+            ["genre_drama"]      = "Dramat",
+            ["genre_horror"]     = "Horror",
+            ["genre_comedy"]     = "Komedia",
+            ["genre_scifi"]      = "Sci-Fi",
+            ["genre_animation"]  = "Animacja",
+            ["genre_thriller"]   = "Thriller",
+            ["type_movie"]       = "Film",
+            ["type_series"]      = "Serial",
+            ["welcome"]          = "Witaj w Watchfolio!",
+            ["enter_credentials"] = "Wprowadź swoje dane",
+            ["create_account"]   = "Utwórz nowe konto",
         },
         ["de"] = new()
         {
@@ -187,6 +312,30 @@ public static class Strings
             ["login_taken"]      = "Dieser Login ist bereits vergeben!",
             ["write_review"]     = "Schreiben Sie Ihre Rezension...",
             ["seasons"]          = "Staffeln",
+            ["no_description"]   = "Keine Beschreibung",
+            ["loading"]          = "Laden...",
+            ["new_movie"]        = "Neuer Film",
+            ["edit_movie"]       = "Film bearbeiten",
+            ["save"]             = "Speichern",
+            ["cancel"]           = "Abbrechen",
+            ["title_error"]      = "Titel eingeben!",
+            ["rating_error"]     = "Bewertung muss zwischen 0 und 10 liegen!",
+            ["search_results"]   = "Suchergebnisse",
+            ["favorites"]        = "Favoriten",
+            ["empty_favorites"]  = "Noch nichts zu Favoriten hinzugefügt",
+            ["genre_all"]        = "Alle",
+            ["genre_action"]     = "Action",
+            ["genre_drama"]      = "Drama",
+            ["genre_horror"]     = "Horror",
+            ["genre_comedy"]     = "Komödien",
+            ["genre_scifi"]      = "Sci-Fi",
+            ["genre_animation"]  = "Animation",
+            ["genre_thriller"]   = "Thriller",
+            ["type_movie"]       = "Film",
+            ["type_series"]      = "Serie",
+            ["welcome"]          = "Willkommen bei Watchfolio!",
+            ["enter_credentials"] = "Geben Sie Ihre Anmeldedaten ein",
+            ["create_account"]   = "Neues Konto erstellen",
         },
         ["fr"] = new()
         {
@@ -232,6 +381,30 @@ public static class Strings
             ["login_taken"]      = "Cet identifiant est déjà pris!",
             ["write_review"]     = "Écrivez votre avis...",
             ["seasons"]          = "saisons",
+            ["no_description"]   = "Pas de description",
+            ["loading"]          = "Chargement...",
+            ["new_movie"]        = "Nouveau film",
+            ["edit_movie"]       = "Modifier le film",
+            ["save"]             = "Enregistrer",
+            ["cancel"]           = "Annuler",
+            ["title_error"]      = "Entrez le titre!",
+            ["rating_error"]     = "La note doit être entre 0 et 10!",
+            ["search_results"]   = "Résultats de recherche",
+            ["favorites"]        = "Favoris",
+            ["empty_favorites"]  = "Rien ajouté aux favoris",
+            ["genre_all"]        = "Tous",
+            ["genre_action"]     = "Action",
+            ["genre_drama"]      = "Drame",
+            ["genre_horror"]     = "Horreur",
+            ["genre_comedy"]     = "Comédie",
+            ["genre_scifi"]      = "Sci-Fi",
+            ["genre_animation"]  = "Animation",
+            ["genre_thriller"]   = "Thriller",
+            ["type_movie"]       = "Film",
+            ["type_series"]      = "Série",
+            ["welcome"]          = "Bienvenue sur Watchfolio!",
+            ["enter_credentials"] = "Entrez vos identifiants",
+            ["create_account"]   = "Créer un nouveau compte",
         },
         ["es"] = new()
         {
@@ -277,24 +450,30 @@ public static class Strings
             ["login_taken"]      = "¡Este usuario ya está en uso!",
             ["write_review"]     = "Escribe tu reseña...",
             ["seasons"]          = "temporadas",
+            ["no_description"]   = "Sin descripción",
+            ["loading"]          = "Cargando...",
+            ["new_movie"]        = "Nueva película",
+            ["edit_movie"]       = "Editar película",
+            ["save"]             = "Guardar",
+            ["cancel"]           = "Cancelar",
+            ["title_error"]      = "¡Ingrese el título!",
+            ["rating_error"]     = "¡La valoración debe estar entre 0 y 10!",
+            ["search_results"]   = "Resultados de búsqueda",
+            ["favorites"]        = "Favoritos",
+            ["empty_favorites"]  = "Aún no se ha añadido nada a favoritos",
+            ["genre_all"]        = "Todos",
+            ["genre_action"]     = "Acción",
+            ["genre_drama"]      = "Drama",
+            ["genre_horror"]     = "Terror",
+            ["genre_comedy"]     = "Comedia",
+            ["genre_scifi"]      = "Ciencia ficción",
+            ["genre_animation"]  = "Animación",
+            ["genre_thriller"]   = "Suspense",
+            ["type_movie"]       = "Película",
+            ["type_series"]      = "Serie",
+            ["welcome"]          = "¡Bienvenido a Watchfolio!",
+            ["enter_credentials"] = "Ingresa tus credenciales",
+            ["create_account"]   = "Crear nueva cuenta",
         },
     };
-
-    public static string Get(string key)
-    {
-        if (_translations.TryGetValue(CurrentLanguage, out var lang) &&
-            lang.TryGetValue(key, out var value))
-            return value;
-        
-        if (_translations["uk"].TryGetValue(key, out var fallback))
-            return fallback;
-
-        return key;
-    }
-
-    public static void SetLanguage(string lang)
-    {
-        if (_translations.ContainsKey(lang))
-            CurrentLanguage = lang;
-    }
 }

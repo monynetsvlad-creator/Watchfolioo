@@ -12,7 +12,8 @@
                 Content="← Назад"
                 Foreground="#888"
                 HorizontalAlignment="Left"
-                Padding="0" />
+                Padding="0"
+                x:Name="BackBtn" />
 
             <Grid ColumnDefinitions="Auto,*">
                 <Border
@@ -84,7 +85,8 @@
                     FontSize="15"
                     FontWeight="Medium"
                     Foreground="White"
-                    Text="Опис" />
+                    Text="Опис"
+                    x:Name="DescriptionHeader" />
                 <TextBlock
                     FontSize="13"
                     Foreground="#BBBBBB"
@@ -100,7 +102,8 @@
                     FontSize="15"
                     FontWeight="Medium"
                     Foreground="White"
-                    Text="Ваша оцінка" />
+                    Text="Ваша оцінка"
+                    x:Name="UserRatingHeader" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button
                         Classes="StarBtn"
@@ -140,7 +143,8 @@
                     FontSize="15"
                     FontWeight="Medium"
                     Foreground="White"
-                    Text="Ваш коментар" />
+                    Text="Ваш коментар"
+                    x:Name="CommentHeader" />
                 <TextBox
                     AcceptsReturn="True"
                     Background="#222"
@@ -148,9 +152,9 @@
                     CornerRadius="8"
                     Foreground="White"
                     Height="100"
-                    Name="CommentBox"
                     PlaceholderText="Напишіть свій відгук..."
-                    TextWrapping="Wrap" />
+                    TextWrapping="Wrap"
+                    x:Name="CommentBox" />
                 <Button
                     Background="#E50914"
                     Click="SaveComment_OnClick"
@@ -159,13 +163,14 @@
                     Foreground="White"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    Padding="12,8" />
+                    Padding="12,8"
+                    x:Name="SaveBtn" />
                 <TextBlock
                     FontSize="12"
                     Foreground="#4CAF50"
                     IsVisible="False"
-                    Name="SavedLabel"
-                    Text="✓ Відгук збережено!" />
+                    Text="✓ Відгук збережено!"
+                    x:Name="SavedLabel" />
             </StackPanel>
 
         </StackPanel>

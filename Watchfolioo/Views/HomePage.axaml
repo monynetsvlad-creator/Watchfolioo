@@ -7,7 +7,10 @@
         <StackPanel Margin="12,16,12,12" Spacing="20">
 
             <StackPanel Spacing="10">
-                <TextBlock Classes="SectionTitle" Text="Популярні фільми" />
+                <TextBlock
+                    Classes="SectionTitle"
+                    Text="Популярні фільми"
+                    x:Name="PopularMoviesTitle" />
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="MoviesRow"
@@ -17,7 +20,10 @@
             </StackPanel>
 
             <StackPanel Spacing="10">
-                <TextBlock Classes="SectionTitle" Text="Популярні серіали" />
+                <TextBlock
+                    Classes="SectionTitle"
+                    Text="Популярні серіали"
+                    x:Name="PopularSeriesTitle" />
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="SeriesRow"
@@ -27,7 +33,10 @@
             </StackPanel>
 
             <StackPanel Spacing="10">
-                <TextBlock Classes="SectionTitle" Text="Нові фільми 2026" />
+                <TextBlock
+                    Classes="SectionTitle"
+                    Text="Нові фільми 2026"
+                    x:Name="NewMoviesTitle" />
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="NewMoviesRow"
@@ -37,7 +46,10 @@
             </StackPanel>
 
             <StackPanel Spacing="10">
-                <TextBlock Classes="SectionTitle" Text="Зараз шукають" />
+                <TextBlock
+                    Classes="SectionTitle"
+                    Text="Зараз шукають"
+                    x:Name="SearchingNowTitle" />
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="TrendingRow"
@@ -47,7 +59,10 @@
             </StackPanel>
 
             <StackPanel Spacing="10">
-                <TextBlock Classes="SectionTitle" Text="Нові сезони 2026" />
+                <TextBlock
+                    Classes="SectionTitle"
+                    Text="Нові сезони 2026"
+                    x:Name="NewSeasonsTitle" />
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="NewSeasonsRow"
@@ -57,7 +72,10 @@
             </StackPanel>
 
             <StackPanel Spacing="10">
-                <TextBlock Classes="SectionTitle" Text="Топ бойовики" />
+                <TextBlock
+                    Classes="SectionTitle"
+                    Text="Топ бойовики"
+                    x:Name="TopActionTitle" />
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="ActionRow"
@@ -67,7 +85,10 @@
             </StackPanel>
 
             <StackPanel Spacing="10">
-                <TextBlock Classes="SectionTitle" Text="Топ комедії" />
+                <TextBlock
+                    Classes="SectionTitle"
+                    Text="Топ комедії"
+                    x:Name="TopComedyTitle" />
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel
                         Name="ComedyRow"

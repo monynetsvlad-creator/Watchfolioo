@@ -24,6 +24,7 @@
                 CornerRadius="8"
                 Foreground="White"
                 Grid.Column="1"
+                Name="AddBtn"
                 Padding="12,6" />
         </Grid>
 
@@ -90,7 +91,8 @@
                         Grid.Column="0"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
-                        Margin="0,0,4,0" />
+                        Margin="0,0,4,0"
+                        Name="CancelBtn" />
                     <Button
                         Background="#E50914"
                         Click="SaveMovie_OnClick"
@@ -100,7 +102,8 @@
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
-                        Margin="4,0,0,0" />
+                        Margin="4,0,0,0"
+                        Name="SaveBtn" />
                 </Grid>
             </StackPanel>
         </Border>

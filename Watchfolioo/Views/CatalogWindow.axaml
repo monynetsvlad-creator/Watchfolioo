@@ -18,7 +18,13 @@
             Grid.Row="0"
             Padding="12,10">
             <StackPanel Spacing="10">
-                <TextBlock Classes="AppTitle" Text="WATCHFOLIO" />
+                <TextBlock
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Foreground="#E50914"
+                    HorizontalAlignment="Center"
+                    Name="AppTitle"
+                    Text="WATCHFOLIO" />
                 <Grid ColumnDefinitions="Auto,*">
                     <Label
                         Content="🔍"

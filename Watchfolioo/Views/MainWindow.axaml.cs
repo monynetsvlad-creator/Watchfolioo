@@ -77,7 +77,7 @@ public partial class MainWindow : Window
 
     public void Login_OnClick(object? sender, RoutedEventArgs e)
     {
-        // Валідація порожніх полів
+        
         if (string.IsNullOrWhiteSpace(LoginUser.Text))
         {
             LoginUser.BorderThickness = new Thickness(2);
@@ -96,7 +96,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        // Скидаємо підсвічування
+       
         LoginUser.BorderThickness = new Thickness(0);
         LoginPass.BorderThickness = new Thickness(0);
 

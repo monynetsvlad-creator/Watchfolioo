@@ -12,12 +12,14 @@ using Watchfolioo.Models;
 using Watchfolioo.Services;
 using Watchfolioo.Localization;
 
+
 public partial class CatalogWindow : Window
 {
     private List<Series> _allMovies;
     private string _activeCategory = "Усі";
-    private HomePage? _homePage;
+    private HomePage? _homePage = new();
     private readonly TranslateService _translator = new();
+    
     
     private readonly List<Category> _categories = new()
     {
@@ -80,7 +82,6 @@ public partial class CatalogWindow : Window
 
     private void GoHome()
     {
-        _homePage = new HomePage();
         NavigateTo(_homePage);
     }
 

@@ -107,4 +107,18 @@ public class Series : INotifyPropertyChanged
         get => _totalSeasons;
         set { _totalSeasons = value; OnPropertyChanged(); }
     }
+
+    private string? _totalEpisodes;
+    public string? TotalEpisodes
+    {
+        get => _totalEpisodes;
+        set { _totalEpisodes = value; OnPropertyChanged(); }
+    }
+
+    private string? _episodeRunTime;
+    public string? EpisodeRunTime
+    {
+        get => _episodeRunTime;
+        set { _episodeRunTime = value; OnPropertyChanged(); }
+    }
 }

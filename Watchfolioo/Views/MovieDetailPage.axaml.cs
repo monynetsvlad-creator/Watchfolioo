@@ -1,12 +1,16 @@
 ﻿namespace Watchfolioo.Views;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Watchfolioo.Models;
 using Watchfolioo.Services;
 using Watchfolioo.Localization;
@@ -17,6 +21,7 @@ public partial class MovieDetailPage : UserControl
     private Action? _goBack;
     private int _userRating = 0;
     private readonly TranslateService _translator = new();
+    private readonly TmdbService _tmdb = new();
 
     public MovieDetailPage(Series movie, Action? goBack = null)
     {
@@ -24,17 +29,17 @@ public partial class MovieDetailPage : UserControl
         _movie = movie;
         _goBack = goBack;
 
-        // Встановлюємо DataContext для Binding
         DataContext = _movie;
 
         Strings.LanguageChanged += ApplyLocalization;
         ApplyLocalization();
-        LoadMovie();
+        
+        Task.Run(() => LoadMovie());
     }
 
     private void ApplyLocalization()
     {
-        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        Avalonia.Threading.Dispatcher.UIThread.Post(async () =>
         {
             if (DescriptionHeader != null) DescriptionHeader.Text = Strings.Get("description");
             if (UserRatingHeader != null)  UserRatingHeader.Text  = Strings.Get("your_rating");
@@ -49,93 +54,82 @@ public partial class MovieDetailPage : UserControl
             else
                 UserRatingLabel.Text = Strings.Get("not_rated");
 
-            if (_movie.Type == "Фільм" || _movie.Type == "Movie" || _movie.Type == "Film")
-                MovieType.Text = Strings.Get("type_movie");
+            if (_movie.Type == "Фільм" || _movie.Type == "Movie")
+            {
+                var parts = new List<string?> { Strings.Get("type_movie"), _movie.Runtime };
+                MovieType.Text = string.Join(" • ", parts.Where(p => !string.IsNullOrEmpty(p)));
+            }
             else
-                MovieType.Text = Strings.Get("type_series");
+            {
+                var parts = new List<string?> 
+                { 
+                    Strings.Get("type_series"), 
+                    _movie.TotalSeasons, 
+                    _movie.TotalEpisodes, 
+                    _movie.EpisodeRunTime 
+                };
+                MovieType.Text = string.Join(" • ", parts.Where(p => !string.IsNullOrEmpty(p)));
+            }
+
+            var lang = Strings.CurrentLanguage;
+            if (!string.IsNullOrEmpty(_movie.Title))
+            {
+                _movie.Title = await _translator.TranslateAsync(_movie.Title, lang);
+            }
+            if (!string.IsNullOrEmpty(_movie.Description) && _movie.Description != Strings.Get("loading"))
+            {
+                _movie.Description = await _translator.TranslateAsync(_movie.Description, lang);
+            }
+            if (!string.IsNullOrEmpty(_movie.Genre))
+            {
+                _movie.Genre = await _translator.TranslateAsync(_movie.Genre, lang);
+            }
         });
     }
 
-    private async void LoadMovie()
+    private async Task LoadMovie()
     {
-        // Title, Genre, Rating, Year, Description, UserComment
-        // оновлюються через INotifyPropertyChanged + Binding автоматично
         _movie.Description = Strings.Get("loading");
 
-        if (_movie.UserRating > 0)
-        {
-            _userRating = (int)_movie.UserRating;
-            UpdateStars(_userRating);
-            UserRatingLabel.Text = $"{Strings.Get("your_rating")}: {_userRating}/5";
-        }
-
-        // Завантажуємо деталі з OMDB
-        var omdb = new OmdbService();
-        Series? details = null;
-
-        if (!string.IsNullOrEmpty(_movie.ImdbId))
-            details = await omdb.GetMovie(_movie.ImdbId);
-        else if (!string.IsNullOrEmpty(_movie.Title))
-        {
-            var results = await omdb.SearchMovies(_movie.Title);
-            if (results.Count > 0 && !string.IsNullOrEmpty(results[0].ImdbId))
-                details = await omdb.GetMovie(results[0].ImdbId!);
-        }
+        Series? details = await _tmdb.GetMovie(_movie.ImdbId ?? "");
 
         if (details != null)
         {
-            // INotifyPropertyChanged автоматично оновить UI через Binding
-            if (!string.IsNullOrEmpty(details.Description) && details.Description != "N/A")
-                _movie.Description  = details.Description;
+            _movie.Rating = details.Rating;
+            _movie.PosterUrl = details.PosterUrl;
+            _movie.Year = details.Year;
+            _movie.Runtime = details.Runtime;
+            _movie.TotalSeasons = details.TotalSeasons;
+            _movie.TotalEpisodes = details.TotalEpisodes;
+            _movie.EpisodeRunTime = details.EpisodeRunTime;
+            
+            var lang = Strings.CurrentLanguage;
+            
+            if (!string.IsNullOrEmpty(details.Title))
+                _movie.Title = await _translator.TranslateAsync(details.Title, lang);
+                
+            if (!string.IsNullOrEmpty(details.Description))
+                _movie.Description = await _translator.TranslateAsync(details.Description, lang);
+            
+            if (!string.IsNullOrEmpty(details.Genre))
+                _movie.Genre = await _translator.TranslateAsync(details.Genre, lang);
 
-            if (!string.IsNullOrEmpty(details.Genre) && details.Genre != "N/A")
-                _movie.Genre        = details.Genre;
-
-            if (!string.IsNullOrEmpty(details.Runtime) && details.Runtime != "N/A")
-                _movie.Runtime      = details.Runtime;
-
-            if (!string.IsNullOrEmpty(details.TotalSeasons) && details.TotalSeasons != "N/A")
-                _movie.TotalSeasons = details.TotalSeasons;
-
-            if (!string.IsNullOrEmpty(details.Rating) && details.Rating != "N/A")
-                _movie.Rating       = details.Rating;
-
-            if (!string.IsNullOrEmpty(details.PosterUrl) && details.PosterUrl != "N/A")
-                _movie.PosterUrl    = details.PosterUrl;
-
-            if (details.Year > 0)
-                _movie.Year = details.Year;
-        }
-        else
-        {
-            _movie.Description = Strings.Get("no_description");
+            ApplyLocalization();
         }
 
-        // Перекладаємо опис і жанр
-        var lang = Strings.CurrentLanguage;
-
-        var translatedDesc = await _translator.TranslateAsync(
-            (!string.IsNullOrEmpty(_movie.Description) && _movie.Description != "N/A")
-                ? _movie.Description : "", lang);
-
-        var translatedGenre = await _translator.TranslateAsync(
-            (!string.IsNullOrEmpty(_movie.Genre) && _movie.Genre != "N/A")
-                ? _movie.Genre : "", lang);
-
-        // Через INotifyPropertyChanged UI оновиться автоматично
-        _movie.Description = string.IsNullOrEmpty(translatedDesc)
-            ? Strings.Get("no_description") : translatedDesc;
-        _movie.Genre = translatedGenre;
-
-        // Постер завантажуємо вручну бо Image.Source не підтримує Binding з URL
-        if (!string.IsNullOrEmpty(_movie.PosterUrl) && _movie.PosterUrl != "N/A")
+        if (!string.IsNullOrEmpty(_movie.PosterUrl))
         {
             try
             {
                 using var http = new HttpClient();
                 var data = await http.GetByteArrayAsync(_movie.PosterUrl);
                 using var ms = new MemoryStream(data);
-                MoviePoster.Source = new Bitmap(ms);
+                var bitmap = new Bitmap(ms);
+                
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (MoviePoster != null) MoviePoster.Source = bitmap;
+                });
             }
             catch { }
         }
@@ -145,9 +139,7 @@ public partial class MovieDetailPage : UserControl
     {
         var stars = new[] { Star1, Star2, Star3, Star4, Star5 };
         for (int i = 0; i < stars.Length; i++)
-            stars[i].Foreground = i < count
-                ? Brush.Parse("#FFD700")
-                : Brush.Parse("#444444");
+            stars[i].Foreground = i < count ? Brush.Parse("#FFD700") : Brush.Parse("#444444");
     }
 
     private void SetRating(int rating)
@@ -166,21 +158,10 @@ public partial class MovieDetailPage : UserControl
 
     private void SaveComment_OnClick(object? sender, RoutedEventArgs e)
     {
-        // TwoWay Binding автоматично зберігає текст з CommentBox в _movie.UserComment
         SavedLabel.IsVisible = true;
-
-        var timer = new System.Timers.Timer(2000);
-        timer.Elapsed += (s, ev) =>
-        {
-            timer.Stop();
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-                SavedLabel.IsVisible = false);
-        };
-        timer.Start();
+        Task.Delay(2000).ContinueWith(_ => 
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => SavedLabel.IsVisible = false));
     }
 
-    private void Back_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _goBack?.Invoke();
-    }
+    private void Back_OnClick(object? sender, RoutedEventArgs e) => _goBack?.Invoke();
 }

@@ -1,4 +1,5 @@
 ﻿namespace Watchfolioo.Views;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -14,7 +15,7 @@ using Watchfolioo.Localization;
 
 public partial class HomePage : UserControl
 {
-    private readonly OmdbService _omdb = new();
+    private readonly TmdbService _tmdb = new();
     private readonly HttpClient _http = new();
     private CatalogWindow? _catalogWindow;
 
@@ -47,63 +48,21 @@ public partial class HomePage : UserControl
 
     private async Task LoadDataAsync()
     {
-        var movieTitles = new[] { "Dune", "Oppenheimer", "Joker", "Interstellar", "Inception", "The Dark Knight", "Avatar", "Gladiator", "Titanic", "The Matrix" };
-        var seriesTitles = new[] { "The Witcher", "Black Mirror", "Squid Game", "House of the Dragon", "Breaking Bad", "Stranger Things", "Game of Thrones", "Peaky Blinders", "The Crown", "Narcos" };
-        var newMovies2026 = new[] { "Captain America Brave New World", "Thunderbolts", "Mission Impossible Final Reckoning", "Jurassic World Rebirth", "Superman", "The Fantastic Four", "Mortal Kombat 2", "Sinners", "Drop", "Warfare" };
-        var trending = new[] { "Adolescence", "The Last of Us", "White Lotus", "Severance", "The Bear", "Andor", "Daredevil Born Again", "Paradise", "Alert", "Your Friendly Neighborhood Spider-Man" };
-        var newSeasons2026 = new[] { "Stranger Things", "Squid Game", "The Witcher", "Peaky Blinders", "Yellowstone", "Ozark", "Succession", "Ted Lasso", "Euphoria", "The Boys" };
-        var actionTitles = new[] { "John Wick", "Mad Max Fury Road", "Die Hard", "Mission Impossible", "Top Gun Maverick", "The Raid", "Heat", "Predator", "Speed", "Face Off" };
-        var comedyTitles = new[] { "The Grand Budapest Hotel", "Superbad", "Step Brothers", "Anchorman", "Bridesmaids", "The Hangover", "Dumb and Dumber", "Clueless", "Mean Girls", "Ferris Bueller" };
+        var movieTitles = new[] { "Dune", "Oppenheimer", "Joker", "Interstellar", "Inception" };
+        var seriesTitles = new[] { "The Witcher", "Black Mirror", "Squid Game", "House of the Dragon" };
+        var newMovies2026 = new[] { "Captain America Brave New World", "Superman", "The Fantastic Four" };
+        var trending = new[] { "The Last of Us", "White Lotus", "Severance", "The Bear" };
+        var newSeasons2026 = new[] { "Stranger Things", "Squid Game", "The Boys" };
+        var actionTitles = new[] { "John Wick", "Mad Max Fury Road", "Mission Impossible" };
+        var comedyTitles = new[] { "The Grand Budapest Hotel", "Superbad", "The Hangover" };
 
-        var movies = new List<Series>();
-        var series = new List<Series>();
-        var newMoviesList = new List<Series>();
-        var trendingList = new List<Series>();
-        var newSeasonsList = new List<Series>();
-        var action = new List<Series>();
-        var comedy = new List<Series>();
-
-        foreach (var title in movieTitles)
-        {
-            var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0) { results[0].Type = "Фільм"; movies.Add(results[0]); }
-        }
-
-        foreach (var title in seriesTitles)
-        {
-            var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0) { results[0].Type = "Серіал"; series.Add(results[0]); }
-        }
-
-        foreach (var title in newMovies2026)
-        {
-            var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0) { results[0].Type = "Фільм"; newMoviesList.Add(results[0]); }
-        }
-
-        foreach (var title in trending)
-        {
-            var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0) { results[0].Type = "Серіал"; trendingList.Add(results[0]); }
-        }
-
-        foreach (var title in newSeasons2026)
-        {
-            var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0) { results[0].Type = "Серіал"; newSeasonsList.Add(results[0]); }
-        }
-
-        foreach (var title in actionTitles)
-        {
-            var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0) { results[0].Type = "Фільм"; action.Add(results[0]); }
-        }
-
-        foreach (var title in comedyTitles)
-        {
-            var results = await _omdb.SearchMovies(title);
-            if (results.Count > 0) { results[0].Type = "Фільм"; comedy.Add(results[0]); }
-        }
+        var movies = await GetListFromApi(movieTitles, "Фільм");
+        var series = await GetListFromApi(seriesTitles, "Серіал");
+        var newMoviesList = await GetListFromApi(newMovies2026, "Фільм");
+        var trendingList = await GetListFromApi(trending, "Серіал");
+        var newSeasonsList = await GetListFromApi(newSeasons2026, "Серіал");
+        var action = await GetListFromApi(actionTitles, "Фільм");
+        var comedy = await GetListFromApi(comedyTitles, "Фільм");
 
         await FillRowAsync(MoviesRow, movies);
         await FillRowAsync(SeriesRow, series);
@@ -113,7 +72,6 @@ public partial class HomePage : UserControl
         await FillRowAsync(ActionRow, action);
         await FillRowAsync(ComedyRow, comedy);
 
-        var omdb = new OmdbService();
         var allLoaded = new List<Series>();
         allLoaded.AddRange(movies);
         allLoaded.AddRange(newMoviesList);
@@ -125,36 +83,23 @@ public partial class HomePage : UserControl
         allSeriesLoaded.AddRange(trendingList);
         allSeriesLoaded.AddRange(newSeasonsList);
 
-        foreach (var movie in allLoaded)
-        {
-            if (!string.IsNullOrEmpty(movie.ImdbId) && string.IsNullOrEmpty(movie.Genre))
-            {
-                var details = await omdb.GetMovie(movie.ImdbId);
-                if (details != null)
-                {
-                    movie.Genre = details.Genre;
-                    movie.Rating = details.Rating;
-                    movie.Year = details.Year;
-                }
-            }
-        }
-
-        foreach (var s in allSeriesLoaded)
-        {
-            if (!string.IsNullOrEmpty(s.ImdbId) && string.IsNullOrEmpty(s.Genre))
-            {
-                var details = await omdb.GetMovie(s.ImdbId);
-                if (details != null)
-                {
-                    s.Genre = details.Genre;
-                    s.Rating = details.Rating;
-                    s.Year = details.Year;
-                }
-            }
-        }
-
         _catalogWindow?.AddMoviesToCatalog(allLoaded);
         _catalogWindow?.AddMoviesToCatalog(allSeriesLoaded);
+    }
+
+    private async Task<List<Series>> GetListFromApi(string[] titles, string type)
+    {
+        var list = new List<Series>();
+        foreach (var title in titles)
+        {
+            var results = await _tmdb.SearchMovies(title);
+            if (results.Count > 0) 
+            { 
+                results[0].Type = type; 
+                list.Add(results[0]); 
+            }
+        }
+        return list;
     }
 
     private async Task FillRowAsync(StackPanel row, List<Series> items)
@@ -170,7 +115,7 @@ public partial class HomePage : UserControl
     private async Task<Border> BuildPosterCardAsync(Series movie)
     {
         Avalonia.Media.IImage? poster = null;
-        if (!string.IsNullOrEmpty(movie.PosterUrl) && movie.PosterUrl != "N/A")
+        if (!string.IsNullOrEmpty(movie.PosterUrl))
         {
             try
             {
@@ -181,19 +126,9 @@ public partial class HomePage : UserControl
             catch { }
         }
 
-        Control posterControl;
-        if (poster != null)
-        {
-            posterControl = new Image { Source = poster, Width = 110, Height = 155, Stretch = Stretch.UniformToFill };
-        }
-        else
-        {
-            posterControl = new Border
-            {
-                Width = 110, Height = 155, Background = Brush.Parse("#1a1a2e"),
-                Child = new TextBlock { Text = movie.Title, Foreground = Brushes.White, FontSize = 11, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(6), VerticalAlignment = VerticalAlignment.Bottom }
-            };
-        }
+        Control posterControl = poster != null 
+            ? new Image { Source = poster, Width = 110, Height = 155, Stretch = Stretch.UniformToFill }
+            : new Border { Width = 110, Height = 155, Background = Brush.Parse("#1a1a2e"), Child = new TextBlock { Text = movie.Title, Foreground = Brushes.White, FontSize = 11, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(6), VerticalAlignment = VerticalAlignment.Bottom } };
 
         var posterBorder = new Border { Width = 110, Height = 155, CornerRadius = new CornerRadius(8), ClipToBounds = true, Child = posterControl };
         var titleBlock = new TextBlock { Text = movie.Title, Foreground = Brush.Parse("#CCCCCC"), FontSize = 11, TextWrapping = TextWrapping.Wrap, MaxWidth = 110, Margin = new Thickness(2, 4, 2, 0) };
@@ -212,8 +147,7 @@ public partial class HomePage : UserControl
         cardBorder.PointerPressed += (s, e) =>
         {
             if (_catalogWindow == null) return;
-            var homePageRef = this;
-            var detailPage = new MovieDetailPage(movie, () => { _catalogWindow.NavigateToPage(homePageRef); });
+            var detailPage = new MovieDetailPage(movie, () => { _catalogWindow.NavigateToPage(this); });
             _catalogWindow.NavigateToPage(detailPage);
         };
 

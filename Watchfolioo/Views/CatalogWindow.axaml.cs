@@ -18,25 +18,8 @@ public partial class CatalogWindow : Window
     private string _activeCategory = "Усі";
     private HomePage? _homePage = new();
     private readonly TranslateService _translator = new();
+    private readonly TmdbService _tmdb = new();
     
-    private readonly List<Category> _categories = new()
-    {
-        new Category { Name = "Усі",         Tag = "Усі" },
-        new Category { Name = "Екшн",        Tag = "Екшн" },
-        new Category { Name = "Драма",       Tag = "Драма" },
-        new Category { Name = "Жахи",        Tag = "Жахи" },
-        new Category { Name = "Комедія",     Tag = "Комедія" },
-        new Category { Name = "Фантастика",  Tag = "Фантастика" },
-        new Category { Name = "Мультфільми", Tag = "Мультфільми" },
-        new Category { Name = "Трилери",     Tag = "Трилери" }
-    };
-
-    private readonly List<string> _cardColors = new()
-    {
-        "#1a1a2e", "#16213e", "#2d1b69", "#1d4350",
-        "#b92b27", "#093028", "#232526", "#614385"
-    };
-
     private UserControl? _currentPage;
 
     public CatalogWindow()
@@ -45,16 +28,10 @@ public partial class CatalogWindow : Window
 
         _allMovies = new List<Series>
         {
-            new Series { Title = "Дюна: Частина 2",  Genre = "Екшн",    Type = "Фільм",  Rating = "8.7", ImdbId = "tt15239678" },
-            new Series { Title = "Оппенгаймер",       Genre = "Драма",   Type = "Фільм",  Rating = "8.4", ImdbId = "tt15398776" },
-            new Series { Title = "Джокер",             Genre = "Драма",   Type = "Фільм",  Rating = "8.5", ImdbId = "tt7286456"  },
-            new Series { Title = "Інтерстеллар",       Genre = "Екшн",    Type = "Фільм",  Rating = "8.6", ImdbId = "tt0816692"  },
-            new Series { Title = "Гра в кальмара 2",  Genre = "Жахи",    Type = "Серіал", Rating = "9.1", ImdbId = "tt21209876" },
-            new Series { Title = "Відьмак",            Genre = "Екшн",    Type = "Серіал", Rating = "8.2", ImdbId = "tt5180504"  },
-            new Series { Title = "Хаус Дракона",       Genre = "Драма",   Type = "Серіал", Rating = "8.6", ImdbId = "tt11198330" },
-            new Series { Title = "Чорне дзеркало",     Genre = "Жахи",    Type = "Серіал", Rating = "9.3", ImdbId = "tt2085059"  },
-            new Series { Title = "Форс мажор",         Genre = "Комедія", Type = "Серіал", Rating = "8.1", ImdbId = "tt1632701"  },
-            new Series { Title = "Той, хто вижив",     Genre = "Екшн",    Type = "Серіал", Rating = "8.9", ImdbId = "tt2741602"  },
+            new Series { Title = "Дюна: Частина 2",  Genre = "Екшн",    Type = "Фільм",  Rating = "8.3", ImdbId = "823464" },
+            new Series { Title = "Оппенгаймер",       Genre = "Драма",   Type = "Фільм",  Rating = "8.1", ImdbId = "872585" },
+            new Series { Title = "Інтерстеллар",       Genre = "Екшн",    Type = "Фільм",  Rating = "8.4", ImdbId = "157336" },
+            new Series { Title = "Відьмак",            Genre = "Екшн",    Type = "Серіал", Rating = "8.1", ImdbId = "71912"  }
         };
 
         Strings.LanguageChanged += ApplyLocalization;
@@ -64,6 +41,15 @@ public partial class CatalogWindow : Window
         GoHome();
         SetActiveNav(HomeBtn);
         ApplyLocalization();
+    }
+
+    public void NavigateToPage(UserControl page) => NavigateTo(page);
+
+    private void NavigateTo(UserControl? page)
+    {
+        if (page == null) return;
+        _currentPage = page;
+        PageFrame.Content = page;
     }
 
     private string GetSearchTermForGenre(string genreTag)
@@ -84,19 +70,17 @@ public partial class CatalogWindow : Window
     private async Task TranslateCatalogGenresAsync()
     {
         var lang = Strings.CurrentLanguage;
-        if (lang == "en") return;
 
         foreach (var movie in _allMovies)
         {
+            if (!string.IsNullOrEmpty(movie.Title))
+                movie.Title = await _translator.TranslateAsync(movie.Title, lang);
             if (!string.IsNullOrEmpty(movie.Genre))
                 movie.Genre = await _translator.TranslateAsync(movie.Genre, lang);
         }
     }
 
-    private void GoHome()
-    {
-        NavigateTo(_homePage);
-    }
+    private void GoHome() => NavigateTo(_homePage);
 
     private void ApplyLocalization()
     {
@@ -113,44 +97,27 @@ public partial class CatalogWindow : Window
 
             BuildCategories();
 
-            if (_currentPage != null)
-            {
-                if (_currentPage is SettingsPage)
-                    NavigateTo(new SettingsPage("користувач"));
-                else if (_currentPage is HomePage)
-                    GoHome();
-            }
+            if (_currentPage is SettingsPage) NavigateTo(new SettingsPage("користувач"));
+            else if (_currentPage is HomePage) GoHome();
         });
     }
 
     private void UpdateNavText(Button btn, string key)
     {
-        if (btn != null && btn.Content is StackPanel sp)
+        if (btn?.Content is StackPanel sp)
         {
             var texts = sp.Children.OfType<TextBlock>().ToList();
-            if (texts.Count >= 2)
-                texts[1].Text = Strings.Get(key);
+            if (texts.Count >= 2) texts[1].Text = Strings.Get(key);
         }
-    }
-
-    public void NavigateToPage(UserControl page)
-    {
-        PageFrame.Content = page;
     }
 
     public void AddMoviesToCatalog(List<Series> movies)
     {
         foreach (var movie in movies)
         {
-            bool exists = _allMovies.Any(m => m.Title?.ToLower() == movie.Title?.ToLower());
-            if (!exists) _allMovies.Add(movie);
+            if (!_allMovies.Any(m => m.ImdbId == movie.ImdbId))
+                _allMovies.Add(movie);
         }
-    }
-
-    private void NavigateTo(UserControl page)
-    {
-        _currentPage = page;
-        PageFrame.Content = page;
     }
 
     private ListPage CreateListPage()
@@ -181,8 +148,7 @@ public partial class CatalogWindow : Window
         {
             var btn = new Button { Content = Strings.Get(key), Tag = tag };
             btn.Classes.Add("CategoryTag");
-            if (tag == _activeCategory)
-                btn.Classes.Add("Active");
+            if (tag == _activeCategory) btn.Classes.Add("Active");
             btn.Click += Category_OnClick;
             CategoryPanel.Children.Add(btn);
         }
@@ -192,11 +158,11 @@ public partial class CatalogWindow : Window
     {
         var buttons = new[] { HomeBtn, MoviesBtn, SeriesBtn, FavBtn, SettingsBtn };
         foreach (var btn in buttons)
-            if (btn != null && btn.Content is StackPanel sp)
+            if (btn?.Content is StackPanel sp)
                 foreach (var child in sp.Children.OfType<TextBlock>())
                     child.Foreground = Brush.Parse("#888888");
 
-        if (active != null && active.Content is StackPanel activeSp)
+        if (active?.Content is StackPanel activeSp)
             foreach (var child in activeSp.Children.OfType<TextBlock>())
                 child.Foreground = Brush.Parse("#E50914");
     }
@@ -211,23 +177,25 @@ public partial class CatalogWindow : Window
             return;
         }
 
+        var lang = Strings.CurrentLanguage;
+        var apiResults = await _tmdb.SearchMovies(text);
+
+        foreach (var apiMovie in apiResults)
+        {
+            if (!_allMovies.Any(m => m.ImdbId == apiMovie.ImdbId))
+            {
+                if (!string.IsNullOrEmpty(apiMovie.Title))
+                    apiMovie.Title = await _translator.TranslateAsync(apiMovie.Title, lang);
+                if (!string.IsNullOrEmpty(apiMovie.Genre))
+                    apiMovie.Genre = await _translator.TranslateAsync(apiMovie.Genre, lang);
+                
+                _allMovies.Add(apiMovie);
+            }
+        }
+
         var localResults = _allMovies
             .Where(m => m.Title != null && m.Title.ToLower().Contains(text.ToLower()))
             .ToList();
-
-        var omdb = new OmdbService();
-        var omdbResults = await omdb.SearchMovies(text);
-
-        foreach (var omdbMovie in omdbResults)
-        {
-            bool exists = _allMovies.Any(m => m.Title?.ToLower() == omdbMovie.Title?.ToLower());
-            if (!exists)
-            {
-                omdbMovie.Type = "Фільм";
-                _allMovies.Add(omdbMovie);
-                localResults.Add(omdbMovie);
-            }
-        }
 
         var listPage = CreateListPage();
         listPage.LoadMovies(localResults);
@@ -241,6 +209,7 @@ public partial class CatalogWindow : Window
             _activeCategory = tag;
             BuildCategories();
 
+            var lang = Strings.CurrentLanguage;
             List<Series> resultsToDisplay;
 
             if (tag == "Усі")
@@ -251,17 +220,19 @@ public partial class CatalogWindow : Window
             {
                 resultsToDisplay = _allMovies.Where(m => m.Genre == tag).ToList();
 
-                if (resultsToDisplay.Count < 10)
+                if (resultsToDisplay.Count < 5)
                 {
-                    var omdb = new OmdbService();
                     var searchTerm = GetSearchTermForGenre(tag);
-                    var apiMovies = await omdb.SearchMovies(searchTerm);
+                    var apiMovies = await _tmdb.SearchMovies(searchTerm);
 
                     foreach (var movie in apiMovies)
                     {
                         if (!_allMovies.Any(m => m.ImdbId == movie.ImdbId))
                         {
                             movie.Genre = tag;
+                            if (!string.IsNullOrEmpty(movie.Title))
+                                movie.Title = await _translator.TranslateAsync(movie.Title, lang);
+                                
                             _allMovies.Add(movie);
                             resultsToDisplay.Add(movie);
                         }
@@ -276,28 +247,21 @@ public partial class CatalogWindow : Window
         }
     }
 
-    private void Nav_Home(object? sender, RoutedEventArgs e)
-    {
-        SetActiveNav(HomeBtn);
-        GoHome();
-    }
-
+    private void Nav_Home(object? sender, RoutedEventArgs e) { SetActiveNav(HomeBtn); GoHome(); }
     private void Nav_Movies(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(MoviesBtn);
         var listPage = CreateListPage();
-        listPage.LoadMovies(_allMovies.Where(m => m.Type == "Фільм").ToList());
+        listPage.LoadMovies(_allMovies.Where(m => m.Type == "Фільм" || m.Type == "Movie").ToList());
         NavigateTo(listPage);
     }
-
     private void Nav_Series(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(SeriesBtn);
         var listPage = CreateListPage();
-        listPage.LoadMovies(_allMovies.Where(m => m.Type == "Серіал").ToList());
+        listPage.LoadMovies(_allMovies.Where(m => m.Type == "Серіал" || m.Type == "Series").ToList());
         NavigateTo(listPage);
     }
-
     private void Nav_Fav(object? sender, RoutedEventArgs e)
     {
         SetActiveNav(FavBtn);
@@ -305,10 +269,5 @@ public partial class CatalogWindow : Window
         listPage.LoadMovies(_allMovies.Where(m => m.IsFavorite).ToList(), Strings.Get("favorites"));
         NavigateTo(listPage);
     }
-
-    private void Nav_Settings(object? sender, RoutedEventArgs e)
-    {
-        SetActiveNav(SettingsBtn);
-        NavigateTo(new SettingsPage("користувач"));
-    }
+    private void Nav_Settings(object? sender, RoutedEventArgs e) { SetActiveNav(SettingsBtn); NavigateTo(new SettingsPage("користувач")); }
 }

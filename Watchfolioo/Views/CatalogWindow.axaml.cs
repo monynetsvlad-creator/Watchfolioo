@@ -12,14 +12,12 @@ using Watchfolioo.Models;
 using Watchfolioo.Services;
 using Watchfolioo.Localization;
 
-
 public partial class CatalogWindow : Window
 {
     private List<Series> _allMovies;
     private string _activeCategory = "Усі";
     private HomePage? _homePage = new();
     private readonly TranslateService _translator = new();
-    
     
     private readonly List<Category> _categories = new()
     {
@@ -66,6 +64,21 @@ public partial class CatalogWindow : Window
         GoHome();
         SetActiveNav(HomeBtn);
         ApplyLocalization();
+    }
+
+    private string GetSearchTermForGenre(string genreTag)
+    {
+        return genreTag switch
+        {
+            "Екшн" => "Action",
+            "Драма" => "Drama",
+            "Жахи" => "Horror",
+            "Комедія" => "Comedy",
+            "Фантастика" => "Sci-Fi",
+            "Мультфільми" => "Animation",
+            "Трилери" => "Thriller",
+            _ => genreTag
+        };
     }
 
     private async Task TranslateCatalogGenresAsync()
@@ -221,17 +234,44 @@ public partial class CatalogWindow : Window
         NavigateTo(listPage);
     }
 
-    private void Category_OnClick(object? sender, RoutedEventArgs e)
+    private async void Category_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is string tag)
         {
             _activeCategory = tag;
             BuildCategories();
-            var filtered = tag == "Усі"
-                ? _allMovies
-                : _allMovies.Where(m => m.Genre == tag).ToList();
+
+            List<Series> resultsToDisplay;
+
+            if (tag == "Усі")
+            {
+                resultsToDisplay = _allMovies.ToList();
+            }
+            else
+            {
+                resultsToDisplay = _allMovies.Where(m => m.Genre == tag).ToList();
+
+                if (resultsToDisplay.Count < 10)
+                {
+                    var omdb = new OmdbService();
+                    var searchTerm = GetSearchTermForGenre(tag);
+                    var apiMovies = await omdb.SearchMovies(searchTerm);
+
+                    foreach (var movie in apiMovies)
+                    {
+                        if (!_allMovies.Any(m => m.ImdbId == movie.ImdbId))
+                        {
+                            movie.Genre = tag;
+                            _allMovies.Add(movie);
+                            resultsToDisplay.Add(movie);
+                        }
+                        if (resultsToDisplay.Count >= 12) break;
+                    }
+                }
+            }
+
             var listPage = CreateListPage();
-            listPage.LoadMovies(filtered);
+            listPage.LoadMovies(resultsToDisplay);
             NavigateTo(listPage);
         }
     }

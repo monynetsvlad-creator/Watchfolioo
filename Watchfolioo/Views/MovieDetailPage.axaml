@@ -1,10 +1,15 @@
 ﻿<UserControl
     x:Class="Watchfolioo.Views.MovieDetailPage"
+    x:DataType="models:Series"
     xmlns="https://github.com/avaloniaui"
+    xmlns:models="clr-namespace:Watchfolioo.Models"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="16" Spacing="16">
+        <StackPanel
+            Margin="16"
+            Spacing="16"
+            x:CompileBindings="False">
 
             <Button
                 Background="Transparent"
@@ -30,13 +35,15 @@
                     Grid.Column="1"
                     Margin="14,0,0,0"
                     Spacing="8">
+
                     <TextBlock
                         FontSize="20"
                         FontWeight="Bold"
                         Foreground="White"
                         Name="MovieTitle"
-                        Text="Назва"
+                        Text="{Binding Title}"
                         TextWrapping="Wrap" />
+
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Border
                             Background="#E50914"
@@ -46,36 +53,39 @@
                                 FontSize="11"
                                 Foreground="White"
                                 Name="MovieType"
-                                Text="Фільм" />
+                                Text="{Binding Type}" />
                         </Border>
                         <TextBlock
                             FontSize="13"
                             Foreground="#FFD700"
                             Name="MovieRating"
-                            Text="★ 0.0"
+                            Text="{Binding Rating, StringFormat='★ {0}'}"
                             VerticalAlignment="Center" />
                     </StackPanel>
+
                     <TextBlock
                         FontSize="13"
                         Foreground="#888"
                         Name="MovieGenre"
-                        Text="Жанр" />
+                        Text="{Binding Genre}" />
+
                     <TextBlock
                         FontSize="13"
                         Foreground="#888"
                         Name="MovieYear"
-                        Text="" />
+                        Text="{Binding Year}" />
+
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <TextBlock
                             FontSize="13"
                             Foreground="#888"
                             Name="MovieRuntime"
-                            Text="" />
+                            Text="{Binding Runtime}" />
                         <TextBlock
                             FontSize="13"
                             Foreground="#888"
                             Name="MovieSeasons"
-                            Text="" />
+                            Text="{Binding TotalSeasons}" />
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -91,7 +101,7 @@
                     FontSize="13"
                     Foreground="#BBBBBB"
                     Name="MovieDescription"
-                    Text="Опис відсутній"
+                    Text="{Binding Description}"
                     TextWrapping="Wrap" />
             </StackPanel>
 
@@ -153,6 +163,7 @@
                     Foreground="White"
                     Height="100"
                     PlaceholderText="Напишіть свій відгук..."
+                    Text="{Binding UserComment, Mode=TwoWay}"
                     TextWrapping="Wrap"
                     x:Name="CommentBox" />
                 <Button

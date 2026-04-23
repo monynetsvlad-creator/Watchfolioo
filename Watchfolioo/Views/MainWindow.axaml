@@ -119,7 +119,8 @@
                     Background="#E50914"
                     Click="RegisterAccount_OnClick"
                     Content="Створити профіль"
-                    Foreground="White" />
+                    Foreground="White"
+                    HorizontalAlignment="Center" />
 
                 <Button
                     Background="Transparent"
